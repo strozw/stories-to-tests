@@ -2,16 +2,21 @@
 export const buildVitestReactStoriesTestCode = (
 	{
 		importStoriesPath,
+		sbPreviewPath,
 		testSuiteName
 	}: {
 		importStoriesPath: string,
+		sbPreviewPath: string,
 		testSuiteName: string
 	}) => {
 	const code = `
-		import { composeStories } from "@storybook/react";
+		import { setProjectAnnotations, composeStories } from "@storybook/react";
 		import { render } from "@testing-library/react";
 		import { describe, test } from "vitest";
+		import * as globalStorybookConfig from "${sbPreviewPath}"; 
 		import * as stories from "${importStoriesPath}"
+
+		setProjectAnnotations(globalStorybookConfig)
 
 		const composedStories = composeStories(stories)
 

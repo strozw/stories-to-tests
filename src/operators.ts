@@ -52,6 +52,8 @@ export const createTestFile = async (
 
 	const importStoriesPath = `./${path.relative(path.dirname(testFileAbsPath), storiesAbsPath)}`
 
+	const sbPreviewPath = path.join(sbConfigPath, 'preview')
+
 	const testSuiteName = storiesAbsPath.replace(cwd, '')
 
 	const code = (() => {
@@ -63,6 +65,7 @@ export const createTestFile = async (
 					default: {
 						return buildVitestReactStoriesTestCode({
 							importStoriesPath,
+							sbPreviewPath,
 							testSuiteName
 						})
 					}
