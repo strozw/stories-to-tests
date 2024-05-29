@@ -1,17 +1,10 @@
-import chalk from "chalk";
 import chokidar from "chokidar";
-import { createTestFile } from "./test-file-creators.js";
+import { createTestFile } from "./generators.js";
 import { Config } from "./types.js";
 import { glob } from "glob";
+import { CreateFileReporter } from "./reporters.js";
 
-export const runBuild = async (sbMain: { stories: string[] }, config: Config) => {
-	const result = {
-		created: 0,
-		override: 0,
-		exists: 0,
-		failed: 0,
-		time: 0
-	}
+export const runBuild = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
 
 	const storiesPaths = await glob(sbMain.stories, { cwd: config.sbConfigPath })
 
@@ -20,35 +13,16 @@ export const runBuild = async (sbMain: { stories: string[] }, config: Config) =>
 			return
 		}
 
-		const { testFilePath, isExists, isCreated, error } = await createTestFile(storiesPath, config)
+		const result = await createTestFile(storiesPath, config)
 
-		if (isExists) {
-			result.exists++;
-
-			console.log(chalk.bgBlue(chalk.black(' EXISTS ')), testFilePath)
-		} else if (isCreated) {
-			result.created++
-
-			console.log(chalk.bgGreen(chalk.black(' CREATED: ')), testFilePath)
-		} else if (Boolean(error)) {
-			result.failed++
-
-			console.log(chalk.bgRed(chalk.black(' FAILED: ')), testFilePath)
-		}
+		reporter.printCreateFileResult(result)
 	}))
 
-	console.log('')
-
-	console.log(
-		chalk.green(`Created: ${result.created}`),
-		chalk.blue(`Exists: ${result.exists}`),
-		chalk.red(`Failed: ${result.failed}`),
-	)
+	reporter.printResult()
 }
 
 
-export const runWacth = async (sbMain: { stories: string[] }, config: Config) => {
-
+export const runWacth = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
 	const watcher = chokidar.watch(sbMain.stories, { cwd: config.sbConfigPath });
 
 	watcher.on("ready", () => {
@@ -57,15 +31,9 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config) =>
 		watcher.on("add", async (storiesPath: string) => {
 			console.log(storiesPath)
 
-			const { testFilePath, isExists, isCreated, error } = await createTestFile(storiesPath, config)
+			const result = await createTestFile(storiesPath, config)
 
-			if (isExists) {
-				console.log(chalk.bgBlue(chalk.black(' EXISTS ')), testFilePath)
-			} else if (isCreated) {
-				console.log(chalk.bgGreen(chalk.black(' CREATED: ')), testFilePath)
-			} else if (Boolean(error)) {
-				console.log(chalk.bgRed(chalk.black(' FAILED: ')), testFilePath)
-			}
+			reporter.printCreateFileResult(result, { record: false })
 		});
 	});
 }

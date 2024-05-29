@@ -6,11 +6,13 @@
 
 		const composedStories = composeStories(stories)
 
-		describe('/Users/s_ohzawa/ghq/github.com/strozw/stories-to-tests/fixtures/react/src/stories/Button.stories.ts', () => {
+		describe('/fixtures/react/src/stories/Button.stories.ts', () => {
 			test.each(Object.entries(composedStories))("%s", async (_name, Component) => {
 				const screen = render(<Component />);
 
-				await Component.play({ canvasElement: screen.container });
+				if ('play' in Component && typeof Component.play === 'function') {
+					await Component?.play({ canvasElement: screen.container });
+				}
 			})
 		})
 	

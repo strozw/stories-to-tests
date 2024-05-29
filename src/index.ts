@@ -4,6 +4,7 @@ import { Command } from 'commander'
 import { serverRequire } from '@storybook/core-common';
 import { Config } from './types.js';
 import { runBuild, runWacth } from './runners.js';
+import { CreateFileReporter } from './reporters.js';
 
 const getStorybookMain = (configDir = '.storybook') => {
 	return serverRequire(path.join(path.resolve(configDir), 'main'))
@@ -46,12 +47,14 @@ program
 			componentType,
 		}
 
+		const reporter = new CreateFileReporter()
+
 		if (isRun) {
-			await runBuild(sbMain, config)
+			await runBuild(sbMain, config, reporter)
 		}
 
 		if (isWatch) {
-			await runWacth(sbMain, config)
+			await runWacth(sbMain, config, reporter)
 		}
 	})
 

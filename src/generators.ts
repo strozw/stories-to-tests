@@ -1,8 +1,7 @@
 import path from 'node:path'
-import fs from 'node:fs'
-import { generateViteReactStoriesTestCode } from "./test-code-generators.js"
+import { buildViteReactStoriesTestCode } from "./templates.js"
 import { createFile } from './utils.js'
-import { Config } from './types.js'
+import type { Config } from './types.js'
 
 export const createTestFile = async (
 	storiesPath: string,
@@ -39,7 +38,7 @@ export const createTestFile = async (
 				switch (componentType) {
 					case 'react':
 					default: {
-						return generateViteReactStoriesTestCode({
+						return buildViteReactStoriesTestCode({
 							importStoriesPath,
 							testSuiteName
 						})
@@ -50,16 +49,6 @@ export const createTestFile = async (
 	})()
 
 	const result = await createFile(testFileAbsPath, code, Boolean(outputDir))
-
-	// const result = await fs.promises.stat(testFileAbsPath).catch(async () => {
-	// 	return await createFile(testFileAbsPath, code)
-	// }).then(async result => {
-	// 	// if (!('error' in result)) {
-	// 	// 	return await createFile(testFileAbsPath, code)
-	// 	// }
-
-	// 	return result
-	// })
 
 	const isExists = result && typeof result === 'object' && !('error' in result)
 
@@ -76,3 +65,5 @@ export const createTestFile = async (
 		error
 	}
 }
+
+export type CreateFileResult = ReturnType<typeof createTestFile> extends Promise<infer T> ? T : never

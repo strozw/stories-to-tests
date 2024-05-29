@@ -1,5 +1,5 @@
 
-export const generateViteReactStoriesTestCode = (
+export const buildViteReactStoriesTestCode = (
 	{
 		importStoriesPath,
 		testSuiteName
@@ -19,10 +19,13 @@ export const generateViteReactStoriesTestCode = (
 			test.each(Object.entries(composedStories))("%s", async (_name, Component) => {
 				const screen = render(<Component />);
 
-				await Component.play({ canvasElement: screen.container });
+				if ('play' in Component && typeof Component.play === 'function') {
+					await Component?.play({ canvasElement: screen.container });
+				}
 			})
 		})
 	`
+
 	return code
 }
 
