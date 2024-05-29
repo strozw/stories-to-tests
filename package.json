@@ -2,11 +2,12 @@
   "name": "stories-to-tests",
   "version": "0.1.0",
   "description": "",
-  "bin": "./src/index.cjs",
+  "bin": "./dist/index.cjs",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
+  "packageManager": "pnpm@9.1.3+sha256.7f63001edc077f1cff96cacba901f350796287a2800dfa83fe898f94183e4f5f",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup ./src/index.ts",
