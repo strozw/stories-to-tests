@@ -3,7 +3,7 @@ import path from 'node:path'
 import { Command } from 'commander'
 import { serverRequire } from '@storybook/core-common';
 import { Config } from './types.js';
-import { runBuild } from './runners.js';
+import { runBuild, runWacth } from './runners.js';
 
 const getStorybookMain = (configDir = '.storybook') => {
 	return serverRequire(path.join(path.resolve(configDir), 'main'))
@@ -19,7 +19,7 @@ program
 	.option('-r --test-runner <test-runner-name>', '生成する test の test runner')
 	.option('-t --component-type <component-type-name>', 'storybook を利用している component のタイプ')
 	.option('-o --output-dir <path>', '出力先のディレクトリを指定する')
-	.option('--watch', '対象の stories ファイルを監視してテストファイルを生成する')
+	.option('-w --watch', '対象の stories ファイルを監視してテストファイルを生成する')
 	.option('--no-run', '即時に変換を実行しない')
 	.action(async (options) => {
 		const sbMain = getStorybookMain(String(options.config))
@@ -32,7 +32,7 @@ program
 
 		const componentType = options.componentType || 'react'
 
-		// const isWatch = Boolean(options.watch)
+		const isWatch = Boolean(options.watch)
 
 		const isRun = Boolean(options.run)
 
@@ -48,6 +48,10 @@ program
 
 		if (isRun) {
 			await runBuild(sbMain, config)
+		}
+
+		if (isWatch) {
+			await runWacth(sbMain, config)
 		}
 	})
 

@@ -67,8 +67,10 @@ export const createTestFile = async (
 
 	const isCreated = !error
 
+	const testFilePath = testFileAbsPath.replace(`${cwd}/`, '')
+
 	return {
-		testFileAbsPath,
+		testFilePath,
 		isCreated,
 		isExists,
 		error
