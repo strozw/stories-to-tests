@@ -26,7 +26,9 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 	const watcher = chokidar.watch(sbMain.stories, { cwd: config.sbConfigPath });
 
 	watcher.on("ready", () => {
+		console.log('')
 		console.log("...waiting...");
+		console.log('')
 
 		watcher.on("add", async (storiesPath: string) => {
 			console.log(storiesPath)
@@ -35,5 +37,9 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 
 			reporter.printCreateFileResult(result, { record: false })
 		});
+	}).on('unlink', async (storiesPath: string) => {
+		const result = await deleteTestFile(storiesPath, config)
+
+		reporter.printDeleteFileResult(result, { record: false })
 	});
 }

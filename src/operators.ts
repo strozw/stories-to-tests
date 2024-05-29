@@ -1,19 +1,17 @@
 import path from 'node:path'
-import { buildViteReactStoriesTestCode } from "./templates.js"
-import { createFile } from './utils.js'
+import { buildVitestReactStoriesTestCode } from "./templates.js"
+import { createFile, deleteFile } from './utils.js'
 import type { Config } from './types.js'
 
-export const createTestFile = async (
-	storiesPath: string,
-	{
-		cwd,
-		sbConfigPath,
-		outputDir,
-		testRunner = 'vite',
-		componentType = 'react'
-	}: Config) => {
-	const storiesAbsPath = path.resolve(sbConfigPath, storiesPath)
+export const createStoriesAbsPath = (storiesPath: string, sbConfigPath: string) => {
+	return path.resolve(sbConfigPath, storiesPath)
+}
 
+export const createTestFilePath = (storiesAbsPath: string, {
+	cwd,
+	outputDir,
+	componentType = 'react'
+}: Config) => {
 	let testFileAbsPath = storiesAbsPath.replace('.stories.', '.stories.test.')
 
 	if (componentType === 'react') {
@@ -27,6 +25,25 @@ export const createTestFile = async (
 		testFileAbsPath = path.join(basePath, part)
 	}
 
+	return testFileAbsPath
+}
+
+export const createTestFile = async (
+	storiesPath: string,
+	config: Config
+) => {
+	const {
+		cwd,
+		sbConfigPath,
+		outputDir,
+		testRunner = 'vite',
+		componentType = 'react'
+	} = config
+
+	const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath)
+
+	const testFileAbsPath = createTestFilePath(storiesAbsPath, config)
+
 	const importStoriesPath = `./${path.relative(path.dirname(testFileAbsPath), storiesAbsPath)}`
 
 	const testSuiteName = storiesAbsPath.replace(cwd, '')
@@ -38,7 +55,7 @@ export const createTestFile = async (
 				switch (componentType) {
 					case 'react':
 					default: {
-						return buildViteReactStoriesTestCode({
+						return buildVitestReactStoriesTestCode({
 							importStoriesPath,
 							testSuiteName
 						})
@@ -67,3 +84,16 @@ export const createTestFile = async (
 }
 
 export type CreateFileResult = ReturnType<typeof createTestFile> extends Promise<infer T> ? T : never
+
+export const deleteTestFile = async (
+	storiesPath: string,
+	config: Config
+) => {
+	const storiesAbsPath = createStoriesAbsPath(storiesPath, config.sbConfigPath)
+
+	const testFileAbsPath = createTestFilePath(storiesAbsPath, config)
+
+	const result = await deleteFile(testFileAbsPath)
+
+	return result
+}

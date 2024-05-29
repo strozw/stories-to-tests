@@ -18,3 +18,15 @@ export const createFile = async (filePath: string, body: string, mkdir: boolean)
 		return { error }
 	}
 }
+
+export const deleteFile = async (filePath: string) => {
+	try {
+		await fs.promises.stat(filePath)
+
+		await fs.promises.unlink(filePath)
+
+		return { error: null }
+	} catch (error) {
+		return { error }
+	}
+}

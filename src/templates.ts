@@ -1,5 +1,5 @@
 
-export const buildViteReactStoriesTestCode = (
+export const buildVitestReactStoriesTestCode = (
 	{
 		importStoriesPath,
 		testSuiteName

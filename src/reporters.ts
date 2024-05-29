@@ -2,12 +2,9 @@ import chalk from "chalk";
 import { CreateFileResult } from "./generators.js"
 
 export class CreateFileReporter {
-
-
 	#result = {
 		created: 0,
 		override: 0,
-		exists: 0,
 		failed: 0,
 		time: 0
 	}
@@ -15,10 +12,10 @@ export class CreateFileReporter {
 	printCreateFileResult({ isExists, isCreated, testFilePath, error }: CreateFileResult, { record = true }: { record?: boolean } = {}) {
 		if (isExists) {
 			if (record) {
-				this.#result.exists++;
+				this.#result.override++;
 			}
 
-			console.log(chalk.bgBlue(chalk.black(' EXISTS ')), testFilePath)
+			console.log(chalk.bgYellow(chalk.black(' OVERRIDE ')), testFilePath)
 		} else if (isCreated) {
 			if (record) {
 				this.#result.created++
@@ -39,7 +36,7 @@ export class CreateFileReporter {
 
 		console.log(
 			chalk.green(`Created: ${this.#result.created}`),
-			chalk.blue(`Exists: ${this.#result.exists}`),
+			chalk.yellow(`Override: ${this.#result.override}`),
 			chalk.red(`Failed: ${this.#result.failed}`),
 		)
 	}
