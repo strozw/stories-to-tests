@@ -16,12 +16,11 @@ program
 	.name('stories-to-tests')
 	.description('yet another storybook test runner for vitest or ...')
 	.version('0.0.1')
-	.option('-c --config <path>', '`.storybook` ディレクトリを指定する')
-	.option('-r --test-runner <test-runner-name>', '生成する test の test runner')
-	.option('-t --component-type <component-type-name>', 'storybook を利用している component のタイプ')
-	.option('-o --output-dir <path>', '出力先のディレクトリを指定する')
-	.option('-w --watch', '対象の stories ファイルを監視してテストファイルを生成する')
-	.option('--no-run', '即時に変換を実行しない')
+	.option('-c --config <path>', '`.storybook` config dir path')
+	.option('-r --test-runner <test-runner-name>', ' test runner type. but now `vitest` only')
+	.option('-t --component-type <component-type-name>', 'compoent type. but now `react` only ')
+	.option('-o --output-dir <path>', 'test files ouput dir path. if not set, test code will be generated next to stories filed.')
+	.option('-w --watch', 'watch target stories paths. if add or delete stories file, realted test code will be generated or deleted.')
 	.action(async (options) => {
 		const sbMain = getStorybookMain(String(options.config))
 
@@ -34,8 +33,6 @@ program
 		const componentType = options.componentType || 'react'
 
 		const isWatch = Boolean(options.watch)
-
-		const isRun = Boolean(options.run)
 
 		const cwd = process.cwd()
 
@@ -53,9 +50,7 @@ program
 			await runClearOuputDir(config)
 		}
 
-		if (isRun) {
-			await runBuild(sbMain, config, reporter)
-		}
+		await runBuild(sbMain, config, reporter)
 
 		if (isWatch) {
 			await runWacth(sbMain, config, reporter)
