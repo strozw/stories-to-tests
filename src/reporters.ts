@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { CreateFileResult } from "./generators.js"
+import { CreateTestFileResult, DeleteTestDirResult, DeleteTestFileResult } from "./operators.js"
 
 export class CreateFileReporter {
 	#result = {
@@ -9,7 +9,7 @@ export class CreateFileReporter {
 		time: 0
 	}
 
-	printCreateFileResult({ isExists, isCreated, testFilePath, error }: CreateFileResult, { record = true }: { record?: boolean } = {}) {
+	printCreateFileResult({ isExists, isCreated, testFilePath, error }: CreateTestFileResult, { record = true }: { record?: boolean } = {}) {
 		if (isExists) {
 			if (record) {
 				this.#result.override++;
@@ -27,7 +27,26 @@ export class CreateFileReporter {
 				this.#result.failed++
 			}
 
-			console.log(chalk.bgRed(chalk.black(' FAILED: ')), testFilePath)
+			console.log(chalk.bgRed(chalk.black(' CREATE FAILED: ')), testFilePath)
+			console.error(error)
+		}
+	}
+
+	printDeleteFileResult({ testFilePath, error }: DeleteTestFileResult) {
+		if (error) {
+			console.log(chalk.bgBlue(chalk.black(' DELETE FAILED: ')), testFilePath)
+			console.error(error)
+		} else {
+			console.log(chalk.bgBlue(chalk.black(' DELETED: ')), testFilePath)
+		}
+	}
+
+	printDeleteOutputTestFileDir({ testDirPath, error }: DeleteTestDirResult) {
+		if (error) {
+			console.log(chalk.bgBlue(chalk.black(' DELETE FAILED: ')), testDirPath)
+			console.error(error)
+		} else {
+			console.log(chalk.bgBlue(chalk.black(' DELETED: ')), testDirPath)
 		}
 	}
 
@@ -40,4 +59,6 @@ export class CreateFileReporter {
 			chalk.red(`Failed: ${this.#result.failed}`),
 		)
 	}
+
+
 }

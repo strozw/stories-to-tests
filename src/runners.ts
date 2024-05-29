@@ -1,5 +1,5 @@
 import chokidar from "chokidar";
-import { createTestFile } from "./generators.js";
+import { createTestFile, deleteTestDir, deleteTestFile } from "./operators.js";
 import { Config } from "./types.js";
 import { glob } from "glob";
 import { CreateFileReporter } from "./reporters.js";
@@ -30,16 +30,24 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 		console.log("...waiting...");
 		console.log('')
 
-		watcher.on("add", async (storiesPath: string) => {
+		watcher.on("add", async (storiesPath) => {
 			console.log(storiesPath)
 
 			const result = await createTestFile(storiesPath, config)
 
 			reporter.printCreateFileResult(result, { record: false })
 		});
-	}).on('unlink', async (storiesPath: string) => {
+	}).on('unlink', async (storiesPath) => {
 		const result = await deleteTestFile(storiesPath, config)
 
-		reporter.printDeleteFileResult(result, { record: false })
+		reporter.printDeleteFileResult(result)
+	}).on('unlinkDir', async (dirPath) => {
+		if (!config.outputDir) {
+			return
+		}
+
+		const result = await deleteTestDir(dirPath, config)
+
+		reporter.printDeleteOutputTestFileDir(result)
 	});
 }

@@ -2,12 +2,13 @@ import path from 'node:path'
 import { buildVitestReactStoriesTestCode } from "./templates.js"
 import { createFile, deleteFile } from './utils.js'
 import type { Config } from './types.js'
+import { glob } from 'glob'
 
 export const createStoriesAbsPath = (storiesPath: string, sbConfigPath: string) => {
 	return path.resolve(sbConfigPath, storiesPath)
 }
 
-export const createTestFilePath = (storiesAbsPath: string, {
+export const createTestFileAbsPath = (storiesAbsPath: string, {
 	cwd,
 	outputDir,
 	componentType = 'react'
@@ -42,7 +43,7 @@ export const createTestFile = async (
 
 	const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath)
 
-	const testFileAbsPath = createTestFilePath(storiesAbsPath, config)
+	const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, config)
 
 	const importStoriesPath = `./${path.relative(path.dirname(testFileAbsPath), storiesAbsPath)}`
 
@@ -83,7 +84,7 @@ export const createTestFile = async (
 	}
 }
 
-export type CreateFileResult = ReturnType<typeof createTestFile> extends Promise<infer T> ? T : never
+export type CreateTestFileResult = ReturnType<typeof createTestFile> extends Promise<infer T> ? T : never
 
 export const deleteTestFile = async (
 	storiesPath: string,
@@ -91,9 +92,29 @@ export const deleteTestFile = async (
 ) => {
 	const storiesAbsPath = createStoriesAbsPath(storiesPath, config.sbConfigPath)
 
-	const testFileAbsPath = createTestFilePath(storiesAbsPath, config)
+	const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, config)
 
 	const result = await deleteFile(testFileAbsPath)
 
-	return result
+	const testFilePath = testFileAbsPath.replace(`${config.cwd}/`, '')
+
+	return { ...result, testFilePath }
 }
+
+export type DeleteTestFileResult = ReturnType<typeof deleteTestFile> extends Promise<infer T> ? T : never
+
+
+export const deleteTestDir = async (
+	relatedDirPath: string,
+	config: Config
+) => {
+	const part = relatedDirPath.replace(config.cwd, '')
+
+	const testDirPath = path.join(config.outputDir, part)
+
+	const result = await deleteFile(testDirPath)
+
+	return { ...result, testDirPath }
+}
+
+export type DeleteTestDirResult = ReturnType<typeof deleteTestDir> extends Promise<infer T> ? T : never
