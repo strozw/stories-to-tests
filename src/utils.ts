@@ -24,9 +24,9 @@ export const deleteFileOrDir = async (filePath: string) => {
 		const stat = await fs.promises.stat(filePath)
 
 		if (stat.isDirectory()) {
-			await fs.promises.rmdir(filePath, { recursive: true })
+			await fs.promises.rm(filePath, { recursive: true })
 		} else {
-			await fs.promises.unlink(filePath)
+			await fs.promises.rm(filePath)
 		}
 
 		return { error: null }
