@@ -19,11 +19,15 @@ export const createFile = async (filePath: string, body: string, mkdir: boolean)
 	}
 }
 
-export const deleteFile = async (filePath: string) => {
+export const deleteFileOrDir = async (filePath: string) => {
 	try {
-		await fs.promises.stat(filePath)
+		const stat = await fs.promises.stat(filePath)
 
-		await fs.promises.unlink(filePath)
+		if (stat.isDirectory()) {
+			await fs.promises.rmdir(filePath, { recursive: true })
+		} else {
+			await fs.promises.unlink(filePath)
+		}
 
 		return { error: null }
 	} catch (error) {

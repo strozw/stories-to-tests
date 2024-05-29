@@ -41,15 +41,6 @@ export class CreateFileReporter {
 		}
 	}
 
-	printDeleteOutputTestFileDir({ testDirPath, error }: DeleteTestDirResult) {
-		if (error) {
-			console.log(chalk.bgBlue(chalk.black(' DELETE FAILED: ')), testDirPath)
-			console.error(error)
-		} else {
-			console.log(chalk.bgBlue(chalk.black(' DELETED: ')), testDirPath)
-		}
-	}
-
 	printResult() {
 		console.log('')
 

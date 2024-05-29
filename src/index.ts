@@ -3,7 +3,7 @@ import path from 'node:path'
 import { Command } from 'commander'
 import { serverRequire } from '@storybook/core-common';
 import { Config } from './types.js';
-import { runBuild, runWacth } from './runners.js';
+import { runBuild, runClearOuputDir, runWacth } from './runners.js';
 import { CreateFileReporter } from './reporters.js';
 
 const getStorybookMain = (configDir = '.storybook') => {
@@ -48,6 +48,10 @@ program
 		}
 
 		const reporter = new CreateFileReporter()
+
+		if (outputDir) {
+			await runClearOuputDir(config)
+		}
 
 		if (isRun) {
 			await runBuild(sbMain, config, reporter)

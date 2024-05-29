@@ -1,8 +1,21 @@
 import chokidar from "chokidar";
-import { createTestFile, deleteTestDir, deleteTestFile } from "./operators.js";
+import { createOutputDirPaht, createTestFile, deleteTestDir, deleteTestFile } from "./operators.js";
 import { Config } from "./types.js";
 import { glob } from "glob";
 import { CreateFileReporter } from "./reporters.js";
+import { deleteFileOrDir } from "./utils.js";
+
+export const runClearOuputDir = async (config: Config) => {
+	if (!config.outputDir) {
+		return
+	}
+
+	const outputDirPath = createOutputDirPaht(config)
+
+	const result = await deleteFileOrDir(outputDirPath)
+
+	return result
+}
 
 export const runBuild = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
 
@@ -41,13 +54,5 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 		const result = await deleteTestFile(storiesPath, config)
 
 		reporter.printDeleteFileResult(result)
-	}).on('unlinkDir', async (dirPath) => {
-		if (!config.outputDir) {
-			return
-		}
-
-		const result = await deleteTestDir(dirPath, config)
-
-		reporter.printDeleteOutputTestFileDir(result)
 	});
 }
