@@ -60,7 +60,8 @@ export const createTestFiles = async (
 
 	const renderer = new Eta({ views: templateDir })
 
-	const templatePaths = await glob(path.join(templateDir, '*.eta'))
+	const globPath = path.join(templateDir, '*.eta')
+	const templatePaths = await glob(globPath)
 
 	const results: CreateTestFileResult[] = []
 

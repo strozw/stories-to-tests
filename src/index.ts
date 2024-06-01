@@ -5,7 +5,6 @@ import { serverRequire } from '@storybook/core-common';
 import { Config } from './types.js';
 import { runBuild, runClearOuputDir, runWacth } from './runners.js';
 import { CreateFileReporter } from './reporters.js';
-import { Eta } from 'eta';
 
 const getStorybookMain = (configDir = '.storybook') => {
 	return serverRequire(path.join(path.resolve(configDir), 'main'))
