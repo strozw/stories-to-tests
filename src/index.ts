@@ -5,6 +5,7 @@ import { serverRequire } from '@storybook/core-common';
 import { Config } from './types.js';
 import { runBuild, runClearOuputDir, runWacth } from './runners.js';
 import { CreateFileReporter } from './reporters.js';
+import { Eta } from 'eta';
 
 const getStorybookMain = (configDir = '.storybook') => {
 	return serverRequire(path.join(path.resolve(configDir), 'main'))
@@ -17,31 +18,33 @@ program
 	.description('yet another storybook test runner for vitest or ...')
 	.version('0.0.1')
 	.option('-c --config <path>', '`.storybook` config dir path')
-	.option('-r --test-runner <test-runner-name>', ' test runner type. but now `vitest` only')
-	.option('-t --component-type <component-type-name>', 'compoent type. but now `react` only ')
+	.option('-t --template-type <template-type>', 'template type. but now `vitest-react` only ')
+	.option('--template-dir <template-dir-path>', 'compoent type. but now `vitest-react` only ')
 	.option('-o --output-dir <path>', 'test files ouput dir path. if not set, test code will be generated next to stories filed.')
 	.option('-w --watch', 'watch target stories paths. if add or delete stories file, realted test code will be generated or deleted.')
 	.action(async (options) => {
+		const cwd = process.cwd()
+
 		const sbMain = getStorybookMain(String(options.config))
 
 		const sbConfigPath = path.resolve(options.config)
 
 		const outputDir = options.outputDir || ''
 
-		const testRunner = options.testRunner || 'vite'
+		const templateType = options.templateType || 'vitest-react'
 
-		const componentType = options.componentType || 'react'
+		const templateDir = templateType === 'custom'
+			? path.resolve(cwd, options.templateDir)
+			: path.resolve(__dirname, `../templates/${templateType}`)
 
 		const isWatch = Boolean(options.watch)
-
-		const cwd = process.cwd()
 
 		const config: Config = {
 			cwd,
 			sbConfigPath,
 			outputDir,
-			testRunner,
-			componentType,
+			templateType,
+			templateDir,
 		}
 
 		const reporter = new CreateFileReporter()

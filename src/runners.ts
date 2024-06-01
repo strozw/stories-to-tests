@@ -1,5 +1,5 @@
 import chokidar from "chokidar";
-import { createOutputDirPaht, createTestFile, deleteTestDir, deleteTestFile } from "./operators.js";
+import { createOutputDirPaht, createTestFiles, deleteTestFiles } from "./operators.js";
 import { Config } from "./types.js";
 import { glob } from "glob";
 import { CreateFileReporter } from "./reporters.js";
@@ -26,9 +26,11 @@ export const runBuild = async (sbMain: { stories: string[] }, config: Config, re
 			return
 		}
 
-		const result = await createTestFile(storiesPath, config)
+		const results = await createTestFiles(storiesPath, config)
 
-		reporter.printCreateFileResult(result)
+		results.forEach(result => {
+			reporter.printCreateFileResult(result)
+		})
 	}))
 
 	reporter.printResult()
@@ -46,13 +48,17 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 		watcher.on("add", async (storiesPath) => {
 			console.log(storiesPath)
 
-			const result = await createTestFile(storiesPath, config)
+			const results = await createTestFiles(storiesPath, config)
 
-			reporter.printCreateFileResult(result, { record: false })
+			results.forEach(result => {
+				reporter.printCreateFileResult(result, { record: false })
+			})
 		});
 	}).on('unlink', async (storiesPath) => {
-		const result = await deleteTestFile(storiesPath, config)
+		const results = await deleteTestFiles(storiesPath, config)
 
-		reporter.printDeleteFileResult(result)
+		results.forEach(result => {
+			reporter.printDeleteFileResult(result)
+		})
 	});
 }
