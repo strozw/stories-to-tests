@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { createFile, deleteFileOrDir } from './utils.js'
+import { asyncThrowableToResult, createFile, deleteFileOrDir, throwableToResult } from './utils.js'
 import type { Config } from './types.js'
 import { Eta } from 'eta'
 import { glob } from 'glob'
@@ -10,6 +10,13 @@ export const createOutputDirPaht = (config: Config) => {
 
 export const createStoriesAbsPath = (storiesPath: string, sbConfigPath: string) => {
 	return path.resolve(sbConfigPath, storiesPath)
+}
+
+export const createStoriesRelPath = (storiesPath: string, config: Config) => {
+	return createStoriesAbsPath(
+		storiesPath,
+		config.sbConfigPath
+	).replace(new RegExp(`^${config.cwd}/`), '')
 }
 
 export const createTestFileAbsPath = (storiesAbsPath: string, templateName: string, config: Config) => {
@@ -61,46 +68,49 @@ export const createTestFiles = async (
 	const renderer = new Eta({ views: templateDir })
 
 	const globPath = path.join(templateDir, '*.eta')
-	const templatePaths = await glob(globPath)
 
-	console.log({
-		globPath,
-		templateDir,
-		templatePaths
-	})
+	const templatePaths = await glob(globPath)
 
 	const results: CreateTestFileResult[] = []
 
 	await Promise.allSettled(templatePaths.map(async templatePath => {
+		const result: CreateTestFileResult = {
+			testFilePath: '',
+			isCreated: false,
+			isExists: false,
+			error: null
+		}
+
 		const templateName = templatePathToName(templatePath, templateDir)
 
 		const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, templateName, config)
 
+		result.testFilePath = testFileAbsPath.replace(`${cwd}/`, '')
+
 		const importStoriesPath = `./${path.relative(path.dirname(testFileAbsPath), storiesAbsPath)}`
 
-		console.log({ templateName, })
-
-		const code = renderer.render(templateName, {
+		const renderResult = throwableToResult(() => renderer.render(templateName, {
 			importStoriesPath,
 			sbPreviewPath,
 			testSuiteName
-		})
+		}))
 
-		const result = await createFile(testFileAbsPath, code, Boolean(outputDir))
+		if ('error' in renderResult) {
+			return results.push({ ...result, error: renderResult.error })
+		}
 
-		const isExists = result && typeof result === 'object' && !('error' in result)
+		const fileCreationResult = await asyncThrowableToResult(() => createFile(
+			testFileAbsPath,
+			renderResult.value ?? '', Boolean(outputDir)
+		))
 
-		const error = !isExists ? result.error : null
-
-		const isCreated = !error
-
-		const testFilePath = testFileAbsPath.replace(`${cwd}/`, '')
+		if ('error' in fileCreationResult) {
+			return results.push({ ...result, error: renderResult.error })
+		}
 
 		results.push({
-			testFilePath,
-			isCreated,
-			isExists,
-			error
+			...result,
+			...fileCreationResult.value
 		})
 	}))
 
@@ -109,6 +119,7 @@ export const createTestFiles = async (
 
 export type DeleteTestFileResult = {
 	testFilePath: string,
+	isDeleted: boolean
 	error: unknown
 }
 
@@ -129,11 +140,19 @@ export const deleteTestFiles = async (
 
 		const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, templateName, config)
 
-		const result = await deleteFileOrDir(testFileAbsPath)
+		const result: DeleteTestFileResult = {
+			testFilePath: testFileAbsPath.replace(`${cwd}/`, ''),
+			isDeleted: false,
+			error: null
+		}
 
-		const testFilePath = testFileAbsPath.replace(`${cwd}/`, '')
+		const fileDeletingResult = await asyncThrowableToResult(() => deleteFileOrDir(testFileAbsPath))
 
-		return { ...result, testFilePath }
+		if ('error' in fileDeletingResult) {
+			return results.push({ ...result, error: fileDeletingResult.error })
+		}
+
+		results.push({ ...result, ...fileDeletingResult.value })
 	}))
 
 	return results

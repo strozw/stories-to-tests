@@ -1,5 +1,5 @@
 import chokidar from "chokidar";
-import { createOutputDirPaht, createTestFiles, deleteTestFiles } from "./operators.js";
+import { createOutputDirPaht, createStoriesAbsPath, createStoriesRelPath, createTestFiles, deleteTestFiles } from "./operators.js";
 import { Config } from "./types.js";
 import { glob } from "glob";
 import { CreateFileReporter } from "./reporters.js";
@@ -28,14 +28,15 @@ export const runBuild = async (sbMain: { stories: string[] }, config: Config, re
 
 		const results = await createTestFiles(storiesPath, config)
 
-		results.forEach(result => {
-			reporter.printCreateFileResult(result)
-		})
+		const storiesRelPath = createStoriesRelPath(storiesPath, config)
+
+		reporter.printStoriesPath(storiesRelPath)
+
+		reporter.printCreateFilesResults(results)
 	}))
 
 	reporter.printResult()
 }
-
 
 export const runWacth = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
 	const watcher = chokidar.watch(sbMain.stories, { cwd: config.sbConfigPath });
@@ -46,19 +47,21 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 		console.log('')
 
 		watcher.on("add", async (storiesPath) => {
-			console.log(storiesPath)
-
 			const results = await createTestFiles(storiesPath, config)
 
-			results.forEach(result => {
-				reporter.printCreateFileResult(result, { record: false })
-			})
+			const storiesRelPath = createStoriesRelPath(storiesPath, config)
+
+			reporter.printAddStoriesPath(storiesRelPath)
+
+			reporter.printCreateFilesResults(results, { record: false })
 		});
 	}).on('unlink', async (storiesPath) => {
 		const results = await deleteTestFiles(storiesPath, config)
 
-		results.forEach(result => {
-			reporter.printDeleteFileResult(result)
-		})
+		const storiesRelPath = createStoriesRelPath(storiesPath, config)
+
+		reporter.printDeleteStoriesPath(storiesRelPath)
+
+		reporter.printDeleteFileResults(results)
 	});
 }
