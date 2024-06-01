@@ -18,7 +18,7 @@ export const createTestFileAbsPath = (storiesAbsPath: string, templateName: stri
 		outputDir,
 	} = config
 
-	let testFileAbsPath = storiesAbsPath.replace(/\.stories\..+$/, `.${templateName}`)
+	let testFileAbsPath = storiesAbsPath.replace(/\.stories\..+$/, `.${templateName.replace(/\.eta$/, '')}`)
 
 	if (outputDir) {
 		const basePath = createOutputDirPaht(config)
@@ -31,7 +31,7 @@ export const createTestFileAbsPath = (storiesAbsPath: string, templateName: stri
 }
 
 export const templatePathToName = (templatePath: string, templateDir: string) =>
-	templatePath.replace(new RegExp(`^${templateDir}`), '').replace(/\.eta$/, '')
+	templatePath.replace(new RegExp(`^${templateDir}/`), '')
 
 
 export type CreateTestFileResult = {
@@ -63,6 +63,12 @@ export const createTestFiles = async (
 	const globPath = path.join(templateDir, '*.eta')
 	const templatePaths = await glob(globPath)
 
+	console.log({
+		globPath,
+		templateDir,
+		templatePaths
+	})
+
 	const results: CreateTestFileResult[] = []
 
 	await Promise.allSettled(templatePaths.map(async templatePath => {
@@ -71,6 +77,8 @@ export const createTestFiles = async (
 		const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, templateName, config)
 
 		const importStoriesPath = `./${path.relative(path.dirname(testFileAbsPath), storiesAbsPath)}`
+
+		console.log({ templateName, })
 
 		const code = renderer.render(templateName, {
 			importStoriesPath,
