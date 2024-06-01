@@ -30,9 +30,9 @@ program
 
 		const outputDir = options.outputDir || ''
 
-		const templateType = options.templateType || 'vitest-react'
+		const templateType = options.templateType
 
-		const templateDir = templateType === 'custom'
+		const templateDir = !options.templateType
 			? path.resolve(cwd, options.templateDir)
 			: path.resolve(__dirname, `../templates/${templateType}`)
 
