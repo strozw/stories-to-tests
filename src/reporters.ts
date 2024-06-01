@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { CreateTestFileResult, DeleteTestDirResult, DeleteTestFileResult } from "./operators.js"
+import { CreateTestFileResult, DeleteTestFileResult } from "./operators.js"
 
 export class CreateFileReporter {
 
