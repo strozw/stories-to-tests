@@ -18,9 +18,31 @@ export const asyncThrowableToResult = async <T extends () => Promise<unknown>>(p
 	}
 }
 
+export const isErrorResult = (result: { value: unknown } | { error: unknown }) => {
+	return 'error' in result
+}
+
 export const getStorybookMain = (configDir = '.storybook') => {
 	return serverRequire(path.join(path.resolve(configDir), 'main'))
 }
+
+export const createOutputDirPaht = (cwd: string, outputDir: string) => {
+	return path.resolve(cwd, outputDir)
+}
+
+export const createStoriesAbsPath = (storiesPath: string, sbConfigPath: string) => {
+	return path.resolve(sbConfigPath, storiesPath)
+}
+
+export const createStoriesRelPath = (cwd: string, sbConfigPath: string, storiesPath: string) => {
+	return createStoriesAbsPath(
+		storiesPath,
+		sbConfigPath
+	).replace(new RegExp(`^${cwd}/`), '')
+}
+
+export const templatePathToName = (templatePath: string, templateDir: string) =>
+	templatePath.replace(new RegExp(`^${templateDir}/`), '')
 
 export const createFile = async (filePath: string, body: string, mkdir: boolean) => {
 	if (mkdir) {

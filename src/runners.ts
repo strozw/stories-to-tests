@@ -1,25 +1,20 @@
 import chokidar from "chokidar";
-import { createOutputDirPaht, createStoriesAbsPath, createStoriesRelPath, createTestFiles, deleteTestFiles } from "./operators.js";
+import { createTestFiles, deleteOutputDir, deleteTestFiles } from "./operators.js";
 import { Config } from "./types.js";
 import { glob } from "glob";
 import { CreateFileReporter } from "./reporters.js";
-import { deleteFileOrDir } from "./utils.js";
+import { createStoriesRelPath } from "./utils.js";
 
-export const runClearOuputDir = async (config: Config) => {
-	if (!config.outputDir) {
-		return
-	}
-
-	const outputDirPath = createOutputDirPaht(config)
-
-	const result = await deleteFileOrDir(outputDirPath)
+export const runClearOutputDir = async (config: Config) => {
+	const result = await deleteOutputDir(config)
 
 	return result
 }
 
 export const runBuild = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
+	const { cwd, sbConfigPath } = config
 
-	const storiesPaths = await glob(sbMain.stories, { cwd: config.sbConfigPath })
+	const storiesPaths = await glob(sbMain.stories, { cwd: sbConfigPath })
 
 	await Promise.allSettled(storiesPaths.map(async storiesPath => {
 		if (!storiesPath.includes('.stories.')) {
@@ -28,7 +23,7 @@ export const runBuild = async (sbMain: { stories: string[] }, config: Config, re
 
 		const results = await createTestFiles(storiesPath, config)
 
-		const storiesRelPath = createStoriesRelPath(storiesPath, config)
+		const storiesRelPath = createStoriesRelPath(cwd, sbConfigPath, storiesPath)
 
 		reporter.printStoriesPath(storiesRelPath)
 
@@ -39,6 +34,8 @@ export const runBuild = async (sbMain: { stories: string[] }, config: Config, re
 }
 
 export const runWacth = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
+	const { cwd, sbConfigPath } = config
+
 	const watcher = chokidar.watch(sbMain.stories, { cwd: config.sbConfigPath });
 
 	watcher.on("ready", () => {
@@ -49,7 +46,7 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 		watcher.on("add", async (storiesPath) => {
 			const results = await createTestFiles(storiesPath, config)
 
-			const storiesRelPath = createStoriesRelPath(storiesPath, config)
+			const storiesRelPath = createStoriesRelPath(cwd, sbConfigPath, storiesPath)
 
 			reporter.printAddStoriesPath(storiesRelPath)
 
@@ -58,7 +55,7 @@ export const runWacth = async (sbMain: { stories: string[] }, config: Config, re
 	}).on('unlink', async (storiesPath) => {
 		const results = await deleteTestFiles(storiesPath, config)
 
-		const storiesRelPath = createStoriesRelPath(storiesPath, config)
+		const storiesRelPath = createStoriesRelPath(cwd, sbConfigPath, storiesPath)
 
 		reporter.printDeleteStoriesPath(storiesRelPath)
 
