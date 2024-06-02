@@ -1,5 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs'
+import { serverRequire } from '@storybook/core-common'
 
 export const throwableToResult = <T extends () => unknown>(produce: T) => {
 	try {
@@ -15,6 +16,10 @@ export const asyncThrowableToResult = async <T extends () => Promise<unknown>>(p
 	} catch (error) {
 		return { error }
 	}
+}
+
+export const getStorybookMain = (configDir = '.storybook') => {
+	return serverRequire(path.join(path.resolve(configDir), 'main'))
 }
 
 export const createFile = async (filePath: string, body: string, mkdir: boolean) => {

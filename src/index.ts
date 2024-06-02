@@ -5,10 +5,26 @@ import { serverRequire } from '@storybook/core-common';
 import { Config } from './types.js';
 import { runBuild, runClearOuputDir, runWacth } from './runners.js';
 import { CreateFileReporter } from './reporters.js';
+import { getStorybookMain } from './utils.js';
+import * as v from 'valibot'
 
-const getStorybookMain = (configDir = '.storybook') => {
-	return serverRequire(path.join(path.resolve(configDir), 'main'))
-}
+const optionsShema =
+	v.intersect([
+		v.object({
+			config: v.string(),
+			outputDir: v.string(),
+		}),
+		v.union([
+			v.object({
+				templateType: v.picklist(['vitest-react']),
+				templateDir: v.undefined_()
+			}),
+			v.object({
+				templateType: v.undefined_(),
+				templateDir: v.string()
+			})
+		])
+	])
 
 const program = new Command()
 
@@ -22,18 +38,30 @@ program
 	.option('-o --output-dir <path>', 'test files ouput directory path. if not set, test code will be generated next to stories filed.')
 	.option('-w --watch', 'watch target stories paths. if add or delete stories file, realted test code will be generated or deleted.')
 	.action(async (options) => {
+		const paraseResult = v.safeParse(optionsShema, options)
+
+		if (!paraseResult.success) {
+			console.log(paraseResult.issues)
+			paraseResult.issues.forEach(issue => {
+				console.log(issue)
+			})
+			return process.exit(1)
+		}
+
+		const parsedOptions = paraseResult.output
+
 		const cwd = process.cwd()
 
-		const sbMain = getStorybookMain(String(options.config))
+		const sbMain = getStorybookMain(String(parsedOptions.config))
 
-		const sbConfigPath = path.resolve(options.config)
+		const sbConfigPath = path.resolve(parsedOptions.config)
 
-		const outputDir = options.outputDir || ''
+		const outputDir = parsedOptions.outputDir || ''
 
-		const templateType = options.templateType
+		const templateType = parsedOptions.templateType ?? 'custom'
 
-		const templateDir = !options.templateType
-			? path.resolve(cwd, options.templateDir)
+		const templateDir = parsedOptions.templateDir
+			? path.resolve(cwd, parsedOptions.templateDir)
 			: path.resolve(__dirname, `../templates/${templateType}`)
 
 		const isWatch = Boolean(options.watch)

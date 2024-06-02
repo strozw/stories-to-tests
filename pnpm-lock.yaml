@@ -39,6 +39,9 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
+      valibot:
+        specifier: 0.31.0-rc.7
+        version: 0.31.0-rc.7
 
 packages:
 
@@ -1266,6 +1269,9 @@ packages:
 
   util@0.12.5:
     resolution: {integrity: sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==}
+
+  valibot@0.31.0-rc.7:
+    resolution: {integrity: sha512-7cFx/n1F1kaPSe9pBxZO3g9PsQnhvWcQhPwE/zH5GJpQ/oMgo8HLxpfE87BEWwOqGVYNIcLIkiWfnCAbHik6uA==}
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -2495,6 +2501,8 @@ snapshots:
       is-generator-function: 1.0.10
       is-typed-array: 1.1.13
       which-typed-array: 1.1.15
+
+  valibot@0.31.0-rc.7: {}
 
   webidl-conversions@3.0.1: {}
 
