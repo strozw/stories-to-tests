@@ -14,12 +14,12 @@ const program = new Command()
 
 program
 	.name('stories-to-tests')
-	.description('yet another storybook test runner for vitest or ...')
+	.description('generate stories tests files from `.stories.tsx`')
 	.version('0.0.1')
 	.option('-c --config <path>', '`.storybook` config dir path')
-	.option('-t --template-type <template-type>', 'template type. but now `vitest-react` only ')
-	.option('--template-dir <template-dir-path>', 'compoent type. but now `vitest-react` only ')
-	.option('-o --output-dir <path>', 'test files ouput dir path. if not set, test code will be generated next to stories filed.')
+	.option('-t --template-type <template-type>', 'template type. but now `vitest-react` only')
+	.option('--template-dir <template-dir-path>', 'custom template directory.')
+	.option('-o --output-dir <path>', 'test files ouput directory path. if not set, test code will be generated next to stories filed.')
 	.option('-w --watch', 'watch target stories paths. if add or delete stories file, realted test code will be generated or deleted.')
 	.action(async (options) => {
 		const cwd = process.cwd()

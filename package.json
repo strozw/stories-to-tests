@@ -1,7 +1,7 @@
 {
   "name": "stories-to-tests",
   "version": "0.1.4",
-  "description": "",
+  "description": "generate stories tests files from `.stories.tsx`",
   "bin": "./dist/index.cjs",
   "type": "module",
   "engines": {
