@@ -14,7 +14,7 @@ const optionsShema = v.intersect([
 	}),
 	v.union([
 		v.object({
-			templateType: v.picklist(["vitest-react"]),
+			templateType: v.picklist(["vitest-react", "playwright-react"]),
 			templateDir: v.undefined_(),
 		}),
 		v.object({
