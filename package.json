@@ -8,20 +8,21 @@
     "node": ">=20"
   },
   "packageManager": "pnpm@9.1.3+sha256.7f63001edc077f1cff96cacba901f350796287a2800dfa83fe898f94183e4f5f",
-  "files": [
-    "dist",
-    "templates"
-  ],
+  "files": ["dist", "templates"],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup ./src/index.ts",
     "dev": "tsup ./src/index.ts --watch --sourcemap",
-    "check:tsc": "tsc --noEmit"
+    "debug": " node --enable-source-maps --inspect ./dist/index.cjs ",
+    "check:tsc": "tsc --noEmit",
+    "check:biome": "biome lint .",
+    "format": "biome check --apply . "
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "1.7.3",
     "@tsconfig/node-lts": "^20.1.3",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5",

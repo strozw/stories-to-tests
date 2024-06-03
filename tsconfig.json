@@ -1,6 +1,4 @@
 {
-	"extends": "@tsconfig/node-lts/tsconfig.json",
-	"exclude": [
-		"./fixtures"
-	]
+  "extends": "@tsconfig/node-lts/tsconfig.json",
+  "exclude": ["./fixtures"]
 }
