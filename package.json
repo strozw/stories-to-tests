@@ -1,6 +1,6 @@
 {
   "name": "stories-to-tests",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "generate stories tests files from `.stories.tsx`",
   "bin": "./dist/index.cjs",
   "type": "module",
@@ -21,7 +21,7 @@
     "check:biome": "biome lint .",
     "check": "concurrently -c auto 'pnpm:check:*'",
     "format": "biome check --apply . ",
-		"postinstall": "lefthook install"
+    "postinstall": "lefthook install"
   },
   "keywords": [],
   "author": "",
