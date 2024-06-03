@@ -6,7 +6,7 @@ import stories from './<%= it.storiesFileBaseName %>.stories.portable'
 
 const test = createTest(base)
 
-describe('<%= it.testSuiteName %>', () => {
+test.describe('<%= it.testSuiteName %>', () => {
 	for (const [name, Component] of Object.entries(stories)) {
 		test(name, async ({ mount }) => {
 			await mount(<Component />);
