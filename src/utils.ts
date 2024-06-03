@@ -97,4 +97,4 @@ export const deleteFileOrDir = async (filePath: string) => {
 };
 
 export const baseNameFromPath = (filePath: string) =>
-	path.basename(filePath, path.extname(filePath));
+	path.basename(filePath).replace(/\.stories\..+$/, "");
