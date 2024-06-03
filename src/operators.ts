@@ -1,113 +1,190 @@
-import path from 'node:path'
-import { buildVitestReactStoriesTestCode } from "./templates.js"
-import { createFile, deleteFileOrDir } from './utils.js'
-import type { Config } from './types.js'
+import path from "node:path";
+import { Eta } from "eta";
+import { glob } from "glob";
+import type { Config } from "./types.js";
+import {
+	asyncThrowableToResult,
+	baseNameFromPath,
+	createFile,
+	createOutputDirPaht,
+	createStoriesAbsPath,
+	deleteFileOrDir,
+	isErrorResult,
+	templatePathToName,
+	throwableToResult,
+} from "./utils.js";
 
-export const createOutputDirPaht = (config: Config) => {
-	return path.resolve(config.cwd, config.outputDir)
-}
+export const createTestFileAbsPath = (
+	storiesAbsPath: string,
+	templateName: string,
+	config: Config,
+) => {
+	const { cwd, outputDir } = config;
 
-export const createStoriesAbsPath = (storiesPath: string, sbConfigPath: string) => {
-	return path.resolve(sbConfigPath, storiesPath)
-}
-
-export const createTestFileAbsPath = (storiesAbsPath: string, config: Config) => {
-	const {
-		cwd,
-		outputDir,
-		componentType = 'react'
-	} = config
-
-	let testFileAbsPath = storiesAbsPath.replace('.stories.', '.stories.test.')
-
-	if (componentType === 'react') {
-		testFileAbsPath = testFileAbsPath.replace(/.ts$/, '.tsx').replace(/.js$/, '.jsx')
-	}
+	let testFileAbsPath = storiesAbsPath.replace(
+		/\.stories\..+$/,
+		`.${templateName.replace(/\.eta$/, "")}`,
+	);
 
 	if (outputDir) {
-		const basePath = createOutputDirPaht(config)
-		const part = testFileAbsPath.replace(cwd, '')
+		const basePath = createOutputDirPaht(cwd, outputDir);
 
-		testFileAbsPath = path.join(basePath, part)
+		const part = testFileAbsPath.replace(cwd, "");
+
+		testFileAbsPath = path.join(basePath, part);
 	}
 
-	return testFileAbsPath
-}
+	return testFileAbsPath;
+};
 
-export const createTestFile = async (
-	storiesPath: string,
-	config: Config
-) => {
-	const {
-		cwd,
-		sbConfigPath,
-		outputDir,
-		testRunner = 'vite',
-		componentType = 'react'
-	} = config
+export type CreateTestFileResult = {
+	testFilePath: string;
+	isCreated: boolean;
+	isExists: boolean;
+	error: unknown;
+};
 
-	const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath)
+export const createTestFiles = async (storiesPath: string, config: Config) => {
+	const { cwd, sbConfigPath, outputDir, templateDir } = config;
 
-	const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, config)
+	const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath);
 
-	const importStoriesPath = `./${path.relative(path.dirname(testFileAbsPath), storiesAbsPath)}`
+	const sbPreviewPath = path.join(sbConfigPath, "preview");
 
-	const sbPreviewPath = path.join(sbConfigPath, 'preview')
+	const testSuiteName = storiesAbsPath.replace(cwd, "");
 
-	const testSuiteName = storiesAbsPath.replace(cwd, '')
+	const renderer = new Eta({ views: templateDir });
 
-	const code = (() => {
-		switch (testRunner) {
-			case 'vite':
-			default: {
-				switch (componentType) {
-					case 'react':
-					default: {
-						return buildVitestReactStoriesTestCode({
-							importStoriesPath,
-							sbPreviewPath,
-							testSuiteName
-						})
-					}
-				}
+	const globPath = path.join(templateDir, "*.eta");
+
+	const templatePaths = await glob(globPath);
+
+	const results: CreateTestFileResult[] = [];
+
+	await Promise.allSettled(
+		templatePaths.map(async (templatePath) => {
+			const result: CreateTestFileResult = {
+				testFilePath: "",
+				isCreated: false,
+				isExists: false,
+				error: null,
+			};
+
+			const templateName = templatePathToName(templatePath, templateDir);
+
+			const testFileAbsPath = createTestFileAbsPath(
+				storiesAbsPath,
+				templateName,
+				config,
+			);
+
+			result.testFilePath = testFileAbsPath.replace(`${cwd}/`, "");
+
+			const importStoriesPath = `./${path.relative(
+				path.dirname(testFileAbsPath),
+				storiesAbsPath,
+			)}`;
+
+			const storiesFileBaseName = baseNameFromPath(importStoriesPath);
+
+			const renderResult = throwableToResult(() =>
+				renderer.render(templateName, {
+					importStoriesPath,
+					storiesFileBaseName,
+					sbPreviewPath,
+					testSuiteName,
+				}),
+			);
+
+			if (isErrorResult(renderResult)) {
+				return results.push({ ...result, error: renderResult.error });
 			}
-		}
-	})()
 
-	const result = await createFile(testFileAbsPath, code, Boolean(outputDir))
+			const fileCreationResult = await asyncThrowableToResult(() =>
+				createFile(
+					testFileAbsPath,
+					renderResult.value ?? "",
+					Boolean(outputDir),
+				),
+			);
 
-	const isExists = result && typeof result === 'object' && !('error' in result)
+			if (isErrorResult(fileCreationResult)) {
+				return results.push({ ...result, error: renderResult.error });
+			}
 
-	const error = !isExists ? result.error : null
+			results.push({
+				...result,
+				...fileCreationResult.value,
+			});
+		}),
+	);
 
-	const isCreated = !error
+	return results;
+};
 
-	const testFilePath = testFileAbsPath.replace(`${cwd}/`, '')
+export type DeleteTestFileResult = {
+	testFilePath: string;
+	isDeleted: boolean;
+	error: unknown;
+};
 
-	return {
-		testFilePath,
-		isCreated,
-		isExists,
-		error
+export const deleteTestFiles = async (storiesPath: string, config: Config) => {
+	const { cwd, sbConfigPath, templateDir } = config;
+
+	const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath);
+
+	const templatePaths = await glob(path.join(templateDir, "*.eta"));
+
+	const results: DeleteTestFileResult[] = [];
+
+	await Promise.allSettled(
+		templatePaths.map(async (templatePath) => {
+			const templateName = templatePathToName(templatePath, templateDir);
+
+			const testFileAbsPath = createTestFileAbsPath(
+				storiesAbsPath,
+				templateName,
+				config,
+			);
+
+			const result: DeleteTestFileResult = {
+				testFilePath: testFileAbsPath.replace(`${cwd}/`, ""),
+				isDeleted: false,
+				error: null,
+			};
+
+			const fileDeletingResult = await asyncThrowableToResult(() =>
+				deleteFileOrDir(testFileAbsPath),
+			);
+
+			if (isErrorResult(fileDeletingResult)) {
+				return results.push({ ...result, error: fileDeletingResult.error });
+			}
+
+			results.push({ ...result, ...fileDeletingResult.value });
+		}),
+	);
+
+	return results;
+};
+
+export const deleteOutputDir = async (config: Config) => {
+	const { cwd, outputDir } = config;
+
+	const outputDirPath = createOutputDirPaht(cwd, outputDir);
+
+	const dirDeletingResult = await asyncThrowableToResult(() =>
+		deleteFileOrDir(outputDirPath),
+	);
+
+	const result: { error: unknown; isDeleted: boolean } = {
+		error: null,
+		isDeleted: false,
+	};
+
+	if (isErrorResult(dirDeletingResult)) {
+		return { ...result, error: dirDeletingResult.error };
 	}
-}
 
-export type CreateTestFileResult = ReturnType<typeof createTestFile> extends Promise<infer T> ? T : never
-
-export const deleteTestFile = async (
-	storiesPath: string,
-	config: Config
-) => {
-	const storiesAbsPath = createStoriesAbsPath(storiesPath, config.sbConfigPath)
-
-	const testFileAbsPath = createTestFileAbsPath(storiesAbsPath, config)
-
-	const result = await deleteFileOrDir(testFileAbsPath)
-
-	const testFilePath = testFileAbsPath.replace(`${config.cwd}/`, '')
-
-	return { ...result, testFilePath }
-}
-
-export type DeleteTestFileResult = ReturnType<typeof deleteTestFile> extends Promise<infer T> ? T : never
-
+	return { ...result, ...dirDeletingResult.value };
+};

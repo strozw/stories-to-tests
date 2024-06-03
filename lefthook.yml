@@ -1,0 +1,4 @@
+ pre-push:
+   commands:
+     project-code-checking:
+       run: pnpm check

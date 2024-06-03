@@ -1,55 +1,79 @@
 import chalk from "chalk";
-import { CreateTestFileResult, DeleteTestDirResult, DeleteTestFileResult } from "./operators.js"
+import type {
+  CreateTestFileResult,
+  DeleteTestFileResult,
+} from "./operators.js";
 
 export class CreateFileReporter {
-	#result = {
-		created: 0,
-		override: 0,
-		failed: 0,
-		time: 0
-	}
+  #result = {
+    created: 0,
+    override: 0,
+    failed: 0,
+    time: 0,
+  };
 
-	printCreateFileResult({ isExists, isCreated, testFilePath, error }: CreateTestFileResult, { record = true }: { record?: boolean } = {}) {
-		if (isExists) {
-			if (record) {
-				this.#result.override++;
-			}
+  printStoriesPath(storiesPath: string) {
+    console.log(chalk.blue(storiesPath));
+  }
 
-			console.log(chalk.bgYellow(chalk.black(' OVERRIDE ')), testFilePath)
-		} else if (isCreated) {
-			if (record) {
-				this.#result.created++
-			}
+  printAddStoriesPath(storiesRelPath: string) {
+    console.log(
+      chalk.bgGreen(chalk.black(" ADD    ")),
+      chalk.blue(storiesRelPath),
+    );
+  }
 
-			console.log(chalk.bgGreen(chalk.black(' CREATED: ')), testFilePath)
-		} else if (Boolean(error)) {
-			if (record) {
-				this.#result.failed++
-			}
+  printDeleteStoriesPath(storiesRelPath: string) {
+    console.log(
+      chalk.bgRed(chalk.black(" DELETE ")),
+      chalk.blue(storiesRelPath),
+    );
+  }
 
-			console.log(chalk.bgRed(chalk.black(' CREATE FAILED: ')), testFilePath)
-			console.error(error)
-		}
-	}
+  printCreateFilesResults(
+    results: CreateTestFileResult[],
+    { record = true }: { record?: boolean } = {},
+  ) {
+    for (const { isExists, isCreated, testFilePath, error } of results) {
+      if (isExists) {
+        if (record) {
+          this.#result.override++;
+        }
 
-	printDeleteFileResult({ testFilePath, error }: DeleteTestFileResult) {
-		if (error) {
-			console.log(chalk.bgBlue(chalk.black(' DELETE FAILED: ')), testFilePath)
-			console.error(error)
-		} else {
-			console.log(chalk.bgBlue(chalk.black(' DELETED: ')), testFilePath)
-		}
-	}
+        console.log(chalk.bgYellow(chalk.black(" OVERRIDE ")), testFilePath);
+      } else if (isCreated) {
+        if (record) {
+          this.#result.created++;
+        }
 
-	printResult() {
-		console.log('')
+        console.log("", chalk.green("+"), testFilePath);
+      } else if (error) {
+        if (record) {
+          this.#result.failed++;
+        }
 
-		console.log(
-			chalk.green(`Created: ${this.#result.created}`),
-			chalk.yellow(`Override: ${this.#result.override}`),
-			chalk.red(`Failed: ${this.#result.failed}`),
-		)
-	}
+        console.error(error);
+      }
+    }
+  }
 
+  printDeleteFileResults(results: DeleteTestFileResult[]) {
+    for (const { testFilePath, error } of results) {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(chalk.red(" - "), testFilePath);
+      }
+    }
+  }
 
+  printResult() {
+    console.log("");
+
+    console.log(
+      chalk.green(`Created: ${this.#result.created}`),
+      chalk.yellow(`Override: ${this.#result.override}`),
+      chalk.red(`Failed: ${this.#result.failed}`),
+    );
+  }
 }

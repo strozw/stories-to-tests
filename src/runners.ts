@@ -1,58 +1,94 @@
 import chokidar from "chokidar";
-import { createOutputDirPaht, createTestFile, deleteTestDir, deleteTestFile } from "./operators.js";
-import { Config } from "./types.js";
 import { glob } from "glob";
-import { CreateFileReporter } from "./reporters.js";
-import { deleteFileOrDir } from "./utils.js";
+import {
+  createTestFiles,
+  deleteOutputDir,
+  deleteTestFiles,
+} from "./operators.js";
+import type { CreateFileReporter } from "./reporters.js";
+import type { Config } from "./types.js";
+import { createStoriesRelPath } from "./utils.js";
 
-export const runClearOuputDir = async (config: Config) => {
-	if (!config.outputDir) {
-		return
-	}
+export const runClearOutputDir = async (config: Config) => {
+  const result = await deleteOutputDir(config);
 
-	const outputDirPath = createOutputDirPaht(config)
+  console.log(result);
 
-	const result = await deleteFileOrDir(outputDirPath)
+  return result;
+};
 
-	return result
-}
+export const runBuild = async (
+  sbMain: { stories: string[] },
+  config: Config,
+  reporter: CreateFileReporter,
+) => {
+  const { cwd, sbConfigPath } = config;
 
-export const runBuild = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
+  const storiesPaths = await glob(sbMain.stories, { cwd: sbConfigPath });
 
-	const storiesPaths = await glob(sbMain.stories, { cwd: config.sbConfigPath })
+  await Promise.allSettled(
+    storiesPaths.map(async (storiesPath) => {
+      if (!storiesPath.includes(".stories.")) {
+        return;
+      }
 
-	await Promise.allSettled(storiesPaths.map(async storiesPath => {
-		if (!storiesPath.includes('.stories.')) {
-			return
-		}
+      const results = await createTestFiles(storiesPath, config);
 
-		const result = await createTestFile(storiesPath, config)
+      const storiesRelPath = createStoriesRelPath(
+        cwd,
+        sbConfigPath,
+        storiesPath,
+      );
 
-		reporter.printCreateFileResult(result)
-	}))
+      reporter.printStoriesPath(storiesRelPath);
 
-	reporter.printResult()
-}
+      reporter.printCreateFilesResults(results);
+    }),
+  );
 
+  reporter.printResult();
+};
 
-export const runWacth = async (sbMain: { stories: string[] }, config: Config, reporter: CreateFileReporter) => {
-	const watcher = chokidar.watch(sbMain.stories, { cwd: config.sbConfigPath });
+export const runWacth = async (
+  sbMain: { stories: string[] },
+  config: Config,
+  reporter: CreateFileReporter,
+) => {
+  const { cwd, sbConfigPath } = config;
 
-	watcher.on("ready", () => {
-		console.log('')
-		console.log("...waiting...");
-		console.log('')
+  const watcher = chokidar.watch(sbMain.stories, { cwd: config.sbConfigPath });
 
-		watcher.on("add", async (storiesPath) => {
-			console.log(storiesPath)
+  watcher
+    .on("ready", () => {
+      console.log("");
+      console.log("...waiting...");
+      console.log("");
 
-			const result = await createTestFile(storiesPath, config)
+      watcher.on("add", async (storiesPath) => {
+        const results = await createTestFiles(storiesPath, config);
 
-			reporter.printCreateFileResult(result, { record: false })
-		});
-	}).on('unlink', async (storiesPath) => {
-		const result = await deleteTestFile(storiesPath, config)
+        const storiesRelPath = createStoriesRelPath(
+          cwd,
+          sbConfigPath,
+          storiesPath,
+        );
 
-		reporter.printDeleteFileResult(result)
-	});
-}
+        reporter.printAddStoriesPath(storiesRelPath);
+
+        reporter.printCreateFilesResults(results, { record: false });
+      });
+    })
+    .on("unlink", async (storiesPath) => {
+      const results = await deleteTestFiles(storiesPath, config);
+
+      const storiesRelPath = createStoriesRelPath(
+        cwd,
+        sbConfigPath,
+        storiesPath,
+      );
+
+      reporter.printDeleteStoriesPath(storiesRelPath);
+
+      reporter.printDeleteFileResults(results);
+    });
+};
