@@ -1,4 +1,6 @@
 {
-  "extends": "@tsconfig/node-lts/tsconfig.json",
-  "exclude": ["./fixtures"]
+	"compilerOptions": {
+		"strict": true
+	},
+  "exclude": ["packages", "./fixtures"]
 }

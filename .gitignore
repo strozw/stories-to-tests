@@ -1,3 +1,4 @@
 .git
+.turbo
+dist
 node_modules
-/dist
