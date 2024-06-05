@@ -7,12 +7,11 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@9.1.3+sha256.7f63001edc077f1cff96cacba901f350796287a2800dfa83fe898f94183e4f5f",
   "files": ["dist", "templates"],
   "scripts": {
     "build": "tsup ./src/index.ts",
     "dev": "tsup ./src/index.ts --watch --sourcemap",
-    "debug": " node --enable-source-maps --inspect ./dist/index.cjs ",
+    "debug": " node --enable-source-maps --inspect ./dist/index.cjs",
     "check:tsc": "tsc --noEmit",
     "check:biome": "biome lint .",
     "check": "concurrently -c auto 'pnpm:check:*'",
@@ -20,8 +19,8 @@
     "test": "vitest --run",
     "postinstall": "lefthook install"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["storybook", "test", "cli"],
+  "author": "strozw",
   "license": "MIT",
   "devDependencies": {
     "@tsconfig/node-lts": "^20.1.3",
