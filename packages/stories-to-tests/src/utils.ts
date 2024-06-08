@@ -1,10 +1,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import { serverRequire } from "@storybook/core-common";
+import { unknown } from "valibot";
+
+export type Ok<V = unknown> = { value: V };
+export type Err<E = unknown> = { error: E };
+
+export type Result<V = unknown, E = unknown> = Ok<V> | Err<E>;
 
 export const throwableToResult = <T extends () => unknown>(produce: T) => {
   try {
-    return { value: produce() as T extends () => infer R ? R : never };
+    return { value: produce() } as Ok<T extends () => infer R ? R : never>;
   } catch (error) {
     return { error };
   }
@@ -15,16 +21,14 @@ export const asyncThrowableToResult = async <T extends () => Promise<unknown>>(
 ) => {
   try {
     return {
-      value: (await produce()) as T extends () => Promise<infer R> ? R : never,
-    };
+      value: await produce(),
+    } as Ok<T extends () => Promise<infer R> ? R : never>;
   } catch (error) {
     return { error };
   }
 };
 
-export const isErrorResult = (
-  result: { value: unknown } | { error: unknown },
-) => {
+export const isErrorResult = (result: Result): result is { error: unknown } => {
   return "error" in result;
 };
 
@@ -85,15 +89,19 @@ export const createFile = async (
 };
 
 export const deleteFileOrDir = async (filePath: string) => {
-  const stat = await fs.promises.stat(filePath);
+  const result = await asyncThrowableToResult(() => fs.promises.stat(filePath));
 
-  if (stat.isDirectory()) {
+  if (isErrorResult(result)) {
+    return null;
+  }
+
+  if (result.value.isDirectory()) {
     await fs.promises.rm(filePath, { recursive: true });
   } else {
     await fs.promises.rm(filePath);
   }
 
-  return { isDeleted: true };
+  return filePath;
 };
 
 export const baseNameFromPath = (filePath: string) =>

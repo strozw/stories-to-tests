@@ -31,7 +31,7 @@ importers:
     dependencies:
       '@storybook/core-common':
         specifier: ^8.1.4
-        version: 8.1.4(prettier@3.2.5)
+        version: 8.1.4(prettier@3.3.0)
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
@@ -130,6 +130,9 @@ importers:
       happy-dom:
         specifier: ^14.11.2
         version: 14.12.0
+      stories-to-tests:
+        specifier: workspace:*
+        version: link:../../packages/stories-to-tests
       storybook:
         specifier: ^8.1.4
         version: 8.1.5(@babel/preset-env@7.24.6(@babel/core@7.24.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3772,6 +3775,11 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prettier@3.3.0:
+    resolution: {integrity: sha512-J9odKxERhCQ10OC2yb93583f6UnYutOeiV5i0zEDS7UGTdUt0u+y8erxl3lBKvwo/JHyyoEdXjwp4dke9oyZ/g==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -6366,7 +6374,7 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  '@storybook/core-common@8.1.4(prettier@3.2.5)':
+  '@storybook/core-common@8.1.4(prettier@3.3.0)':
     dependencies:
       '@storybook/core-events': 8.1.4
       '@storybook/csf-tools': 8.1.4
@@ -6389,7 +6397,7 @@ snapshots:
       node-fetch: 2.7.0
       picomatch: 2.3.1
       pkg-dir: 5.0.0
-      prettier-fallback: prettier@3.2.5
+      prettier-fallback: prettier@3.3.0
       pretty-hrtime: 1.0.3
       resolve-from: 5.0.0
       semver: 7.6.2
@@ -6398,7 +6406,7 @@ snapshots:
       ts-dedent: 2.2.0
       util: 0.12.5
     optionalDependencies:
-      prettier: 3.2.5
+      prettier: 3.3.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -6426,7 +6434,7 @@ snapshots:
       node-fetch: 2.7.0
       picomatch: 2.3.1
       pkg-dir: 5.0.0
-      prettier-fallback: prettier@3.2.5
+      prettier-fallback: prettier@3.3.0
       pretty-hrtime: 1.0.3
       resolve-from: 5.0.0
       semver: 7.6.2
@@ -8940,6 +8948,8 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.2.5: {}
+
+  prettier@3.3.0: {}
 
   pretty-format@27.5.1:
     dependencies:

@@ -2,6 +2,7 @@ import path from "node:path";
 import { Eta } from "eta";
 import { glob } from "glob";
 import type { Config } from "./types.js";
+import type { Result } from "./utils.js";
 import {
   asyncThrowableToResult,
   baseNameFromPath,
@@ -37,12 +38,11 @@ export const createTestFileAbsPath = (
   return testFileAbsPath;
 };
 
-export type CreateTestFileResult = {
+export type CreateTestFileResult = Result<{
   testFilePath: string;
   isCreated: boolean;
   isExists: boolean;
-  error: unknown;
-};
+}>;
 
 export const createTestFiles = async (storiesPath: string, config: Config) => {
   const { cwd, sbConfigPath, outputDir, templateDir } = config;
@@ -64,10 +64,11 @@ export const createTestFiles = async (storiesPath: string, config: Config) => {
   await Promise.allSettled(
     templatePaths.map(async (templatePath) => {
       const result: CreateTestFileResult = {
-        testFilePath: "",
-        isCreated: false,
-        isExists: false,
-        error: null,
+        value: {
+          testFilePath: "",
+          isCreated: false,
+          isExists: false,
+        },
       };
 
       const templateName = templatePathToName(templatePath, templateDir);
@@ -78,7 +79,7 @@ export const createTestFiles = async (storiesPath: string, config: Config) => {
         config,
       );
 
-      result.testFilePath = testFileAbsPath.replace(`${cwd}/`, "");
+      result.value.testFilePath = testFileAbsPath.replace(`${cwd}/`, "");
 
       const importStoriesPath = `./${path.relative(
         path.dirname(testFileAbsPath),
@@ -109,24 +110,25 @@ export const createTestFiles = async (storiesPath: string, config: Config) => {
       );
 
       if (isErrorResult(fileCreationResult)) {
-        return results.push({ ...result, error: renderResult.error });
+        return results.push({ error: fileCreationResult.error });
       }
 
-      results.push({
-        ...result,
+      result.value = {
+        ...result.value,
         ...fileCreationResult.value,
-      });
+      };
+
+      results.push(result);
     }),
   );
 
   return results;
 };
 
-export type DeleteTestFileResult = {
+export type DeleteTestFileResult = Result<{
   testFilePath: string;
-  isDeleted: boolean;
-  error: unknown;
-};
+  deletedPath: null | string;
+}>;
 
 export const deleteTestFiles = async (storiesPath: string, config: Config) => {
   const { cwd, sbConfigPath, templateDir } = config;
@@ -148,9 +150,10 @@ export const deleteTestFiles = async (storiesPath: string, config: Config) => {
       );
 
       const result: DeleteTestFileResult = {
-        testFilePath: testFileAbsPath.replace(`${cwd}/`, ""),
-        isDeleted: false,
-        error: null,
+        value: {
+          testFilePath: testFileAbsPath.replace(`${cwd}/`, ""),
+          deletedPath: null,
+        },
       };
 
       const fileDeletingResult = await asyncThrowableToResult(() =>
@@ -158,10 +161,12 @@ export const deleteTestFiles = async (storiesPath: string, config: Config) => {
       );
 
       if (isErrorResult(fileDeletingResult)) {
-        return results.push({ ...result, error: fileDeletingResult.error });
+        return results.push({ error: fileDeletingResult.error });
       }
 
-      results.push({ ...result, ...fileDeletingResult.value });
+      result.value.deletedPath = fileDeletingResult.value;
+
+      results.push(result);
     }),
   );
 
@@ -177,14 +182,14 @@ export const deleteOutputDir = async (config: Config) => {
     deleteFileOrDir(outputDirPath),
   );
 
-  const result: { error: unknown; isDeleted: boolean } = {
+  const result = {
     error: null,
-    isDeleted: false,
+    value: "",
   };
 
   if (isErrorResult(dirDeletingResult)) {
     return { ...result, error: dirDeletingResult.error };
   }
 
-  return { ...result, ...dirDeletingResult.value };
+  return { ...result, ...dirDeletingResult };
 };

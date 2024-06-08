@@ -1,5 +1,5 @@
 {
-  "name": "@stories-to-tests/tests-vtest-react",
+  "name": "tests-vtest-react",
   "private": true,
   "version": "0.0.0",
   "type": "module",

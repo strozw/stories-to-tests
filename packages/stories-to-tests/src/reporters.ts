@@ -3,8 +3,9 @@ import type {
   CreateTestFileResult,
   DeleteTestFileResult,
 } from "./operators.js";
+import { isErrorResult } from "./utils.js";
 
-export class CreateFileReporter {
+export class Reporter {
   #result = {
     created: 0,
     override: 0,
@@ -13,7 +14,7 @@ export class CreateFileReporter {
   };
 
   printStoriesPath(storiesPath: string) {
-    console.log(chalk.blue(storiesPath));
+    console.log(chalk.blue('Ref:'), chalk.blue(storiesPath));
   }
 
   printAddStoriesPath(storiesRelPath: string) {
@@ -34,7 +35,18 @@ export class CreateFileReporter {
     results: CreateTestFileResult[],
     { record = true }: { record?: boolean } = {},
   ) {
-    for (const { isExists, isCreated, testFilePath, error } of results) {
+    for (const result of results) {
+      if (isErrorResult(result)) {
+        if (record) {
+          this.#result.failed++;
+        }
+
+        console.error(result.error);
+        return
+      }
+
+      const { testFilePath, isExists, isCreated } = result.value
+
       if (isExists) {
         if (record) {
           this.#result.override++;
@@ -47,22 +59,16 @@ export class CreateFileReporter {
         }
 
         console.log("", chalk.green("+"), testFilePath);
-      } else if (error) {
-        if (record) {
-          this.#result.failed++;
-        }
-
-        console.error(error);
       }
     }
   }
 
   printDeleteFileResults(results: DeleteTestFileResult[]) {
-    for (const { testFilePath, error } of results) {
-      if (error) {
-        console.error(error);
+    for (const result of results) {
+      if (isErrorResult(result)) {
+        console.error(result.error);
       } else {
-        console.log(chalk.red(" - "), testFilePath);
+        console.log(chalk.red(" -"), result.value.testFilePath);
       }
     }
   }
@@ -75,5 +81,10 @@ export class CreateFileReporter {
       chalk.yellow(`Override: ${this.#result.override}`),
       chalk.red(`Failed: ${this.#result.failed}`),
     );
+  }
+
+  printDeletedOutputDir(ouputDir: string) {
+    console.log(chalk.blue("Reset OutputDir"));
+    console.log(chalk.red(" -"), ouputDir);
   }
 }

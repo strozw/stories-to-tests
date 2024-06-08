@@ -5,22 +5,23 @@ import {
   deleteOutputDir,
   deleteTestFiles,
 } from "./operators.js";
-import type { CreateFileReporter } from "./reporters.js";
+import type { Reporter } from "./reporters.js";
 import type { Config } from "./types.js";
 import { createStoriesRelPath } from "./utils.js";
 
-export const runClearOutputDir = async (config: Config) => {
+export const runClearOutputDir = async (config: Config, reporter: Reporter) => {
   const result = await deleteOutputDir(config);
 
-  console.log(result);
-
-  return result;
+  if (result.value) {
+    const deletedRelPath = result.value.replace(`${config.cwd}/`, "");
+    reporter.printDeletedOutputDir(deletedRelPath);
+  }
 };
 
 export const runBuild = async (
   sbMain: { stories: string[] },
   config: Config,
-  reporter: CreateFileReporter,
+  reporter: Reporter,
 ) => {
   const { cwd, sbConfigPath } = config;
 
@@ -52,7 +53,7 @@ export const runBuild = async (
 export const runWacth = async (
   sbMain: { stories: string[] },
   config: Config,
-  reporter: CreateFileReporter,
+  reporter: Reporter,
 ) => {
   const { cwd, sbConfigPath } = config;
 
