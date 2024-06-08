@@ -20,6 +20,7 @@
     "check": "concurrently -c auto 'pnpm:check:*'",
     "format": "biome check --apply . ",
     "test": "vitest --run",
+    "prepublish": "pnpm build",
     "postinstall": "lefthook install"
   },
   "keywords": [
