@@ -13,8 +13,12 @@ export class Reporter {
     time: 0,
   };
 
+  printPathNotExists(targetPath: string) {
+    console.log(chalk.red(`Error: "${targetPath}" is not exists.`));
+  }
+
   printStoriesPath(storiesPath: string) {
-    console.log(chalk.blue('Ref:'), chalk.blue(storiesPath));
+    console.log(chalk.blue("Ref:"), chalk.blue(storiesPath));
   }
 
   printAddStoriesPath(storiesRelPath: string) {
@@ -42,10 +46,10 @@ export class Reporter {
         }
 
         console.error(result.error);
-        return
+        return;
       }
 
-      const { testFilePath, isExists, isCreated } = result.value
+      const { testFilePath, isExists, isCreated } = result.value;
 
       if (isExists) {
         if (record) {

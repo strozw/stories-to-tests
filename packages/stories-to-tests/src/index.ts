@@ -5,7 +5,7 @@ import * as v from "valibot";
 import { Reporter } from "./reporter.js";
 import { runBuild, runClearOutputDir, runWacth } from "./runners.js";
 import type { Config } from "./types.js";
-import { getStorybookMain } from "./utils.js";
+import { getStorybookMain, isExistsPath } from "./utils.js";
 
 const optionsShema = v.intersect([
   v.object({
@@ -45,6 +45,8 @@ program
     "watch target stories paths. if add or delete stories file, realted test code will be generated or deleted.",
   )
   .action(async (options) => {
+    const reporter = new Reporter();
+
     const paraseResult = v.safeParse(optionsShema, options);
 
     if (!paraseResult.success) {
@@ -65,6 +67,10 @@ program
 
     const sbConfigPath = path.resolve(parsedOptions.config);
 
+    if (!(await isExistsPath(sbConfigPath))) {
+      return reporter.printPathNotExists(sbConfigPath);
+    }
+
     const outputDir = parsedOptions.outputDir || "";
 
     const templateType = parsedOptions.templateType ?? "custom";
@@ -82,8 +88,6 @@ program
       templateType,
       templateDir,
     };
-
-    const reporter = new Reporter();
 
     if (outputDir) {
       await runClearOutputDir(config, reporter);

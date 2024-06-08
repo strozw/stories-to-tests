@@ -61,6 +61,14 @@ export const createStoriesRelPath = (
 export const templatePathToName = (templatePath: string, templateDir: string) =>
   templatePath.replace(new RegExp(`^${templateDir}/`), "");
 
+export const isExistsPath = async (filePath: string) => {
+  return Boolean(
+    await fs.promises.stat(filePath).catch(async () => {
+      return false;
+    }),
+  );
+};
+
 export const createFile = async (
   filePath: string,
   body: string,
@@ -74,11 +82,7 @@ export const createFile = async (
     });
   }
 
-  const isExists = Boolean(
-    await fs.promises.stat(filePath).catch(async () => {
-      return false;
-    }),
-  );
+  const isExists = await isExistsPath(filePath);
 
   await fs.promises
     .writeFile(filePath, body)
