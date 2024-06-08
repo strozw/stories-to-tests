@@ -9,6 +9,8 @@
     "templates"
   ],
   "scripts": {
+    "publish-package": "pnpm publish --filter=stories-to-tests",
+    "version-package": "pnpm version --filter=stories-to-tests",
     "build": "turbo run build --filter=stories-to-tests --log-prefix none --",
     "debug": "turbo run debug --filter=stories-to-tests --log-prefix none --",
     "dev": "turbo run dev --filter=stories-to-tests --log-prefix none --",
