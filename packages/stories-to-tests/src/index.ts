@@ -2,7 +2,7 @@
 import path from "node:path";
 import { Command } from "commander";
 import * as v from "valibot";
-import { Reporter } from "./reporters.js";
+import { Reporter } from "./reporter.js";
 import { runBuild, runClearOutputDir, runWacth } from "./runners.js";
 import type { Config } from "./types.js";
 import { getStorybookMain } from "./utils.js";

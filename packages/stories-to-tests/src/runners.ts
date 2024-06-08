@@ -5,7 +5,7 @@ import {
   deleteOutputDir,
   deleteTestFiles,
 } from "./operators.js";
-import type { Reporter } from "./reporters.js";
+import type { Reporter } from "./reporter.js";
 import type { Config } from "./types.js";
 import { createStoriesRelPath } from "./utils.js";
 
