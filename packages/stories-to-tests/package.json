@@ -21,8 +21,7 @@
     "check": "concurrently -c auto 'pnpm:check:*'",
     "format": "biome check --apply . ",
     "test": "vitest --run",
-    "prepublish": "pnpm clear && pnpm build",
-    "postinstall": "lefthook install"
+    "prepublish": "pnpm clear && pnpm build"
   },
   "keywords": [
     "storybook",
