@@ -1,13 +1,16 @@
 {
   "name": "stories-to-tests",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "generate stories tests files from `.stories.tsx`",
   "bin": "./dist/index.cjs",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "templates"],
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
     "build": "tsup ./src/index.ts",
     "dev": "tsup ./src/index.ts --watch --sourcemap",
@@ -19,7 +22,11 @@
     "test": "vitest --run",
     "postinstall": "lefthook install"
   },
-  "keywords": ["storybook", "test", "cli"],
+  "keywords": [
+    "storybook",
+    "test",
+    "cli"
+  ],
   "author": "strozw",
   "license": "MIT",
   "devDependencies": {
