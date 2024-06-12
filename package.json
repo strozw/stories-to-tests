@@ -1,14 +1,13 @@
 {
   "name": "@stories-to-tests/monorepo",
+  "version": "0.1.12",
+  "private": true,
   "type": "module",
   "engines": {
     "node": ">=20"
   },
   "packageManager": "pnpm@9.2.0+sha256.94fab213df221c55b6956b14a2264c21c6203cca9f0b3b95ff2fe9b84b120390",
-  "files": [
-    "dist",
-    "templates"
-  ],
+  "files": ["dist", "templates"],
   "scripts": {
     "publish-package": "pnpm publish --filter=stories-to-tests",
     "version-package": "pnpm version --filter=stories-to-tests",
@@ -25,11 +24,11 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "1.7.4-nightly.125f34b",
+    "@changesets/cli": "^2.27.5",
     "concurrently": "^8.2.2",
     "lefthook": "^1.6.14",
     "turbo": "^1.13.3",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
-  },
-  "version": "0.0.1"
+  }
 }

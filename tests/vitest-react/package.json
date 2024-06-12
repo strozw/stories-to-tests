@@ -1,7 +1,7 @@
 {
   "name": "tests-vtest-react",
+  "version": "0.1.12",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
