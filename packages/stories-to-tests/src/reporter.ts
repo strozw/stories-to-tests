@@ -1,11 +1,20 @@
 import chalk from "chalk";
+import * as v from "valibot";
 import type {
   CreateTestFileResult,
   DeleteTestFileResult,
 } from "./operators.js";
 import { isErrorResult } from "./utils.js";
+import type { ParseResultIssues } from "./options.js";
 
 export class Reporter {
+  printParseOptionsError(issues: ParseResultIssues) {
+    for (const issue of issues) {
+      if (issue.issues) {
+        console.error(v.flatten(issue.issues));
+      }
+    }
+  }
   #result = {
     created: 0,
     override: 0,

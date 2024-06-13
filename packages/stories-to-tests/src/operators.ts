@@ -1,7 +1,7 @@
 import path from "node:path";
 import { Eta } from "eta";
 import { glob } from "glob";
-import type { Config } from "./types.js";
+import type { Config } from "./config.js";
 import type { Result } from "./utils.js";
 import {
   asyncThrowableToResult,

@@ -6,7 +6,7 @@ import {
   deleteTestFiles,
 } from "./operators.js";
 import type { Reporter } from "./reporter.js";
-import type { Config } from "./types.js";
+import type { Config } from "./config.js";
 import { createStoriesRelPath } from "./utils.js";
 
 export const runClearOutputDir = async (config: Config, reporter: Reporter) => {

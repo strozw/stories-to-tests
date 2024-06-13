@@ -32,8 +32,8 @@ export const isErrorResult = (result: Result): result is { error: unknown } => {
   return "error" in result;
 };
 
-export const getStorybookMain = (configDir = ".storybook") => {
-  return serverRequire(path.join(path.resolve(configDir), "main"));
+export const getStorybookMain = (configDirPath: string) => {
+  return serverRequire(path.join(configDirPath, "main"));
 };
 
 export const createOutputDirPaht = (cwd: string, outputDir: string) => {

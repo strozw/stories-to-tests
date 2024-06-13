@@ -1,28 +1,11 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { Command } from "commander";
-import * as v from "valibot";
 import { Reporter } from "./reporter.js";
 import { runBuild, runClearOutputDir, runWacth } from "./runners.js";
-import type { Config } from "./types.js";
+import { defineConfig, type Config } from "./config.js";
 import { getStorybookMain, isExistsPath } from "./utils.js";
-
-const optionsShema = v.intersect([
-  v.object({
-    config: v.string(),
-    outputDir: v.string(),
-  }),
-  v.union([
-    v.object({
-      templateType: v.picklist(["vitest-react", "playwright-react"]),
-      templateDir: v.undefined_(),
-    }),
-    v.object({
-      templateType: v.undefined_(),
-      templateDir: v.string(),
-    }),
-  ]),
-]);
+import { parseOptions } from "./options.js";
 
 const program = new Command();
 
@@ -47,55 +30,31 @@ program
   .action(async (options) => {
     const reporter = new Reporter();
 
-    const paraseResult = v.safeParse(optionsShema, options);
+    const paraseResult = parseOptions(options);
 
     if (!paraseResult.success) {
-      for (const issue of paraseResult.issues) {
-        if (issue.issues) {
-          console.error(v.flatten(issue.issues));
-        }
-      }
+      reporter.printParseOptionsError(paraseResult.issues)
 
       return process.exit(1);
     }
 
     const parsedOptions = paraseResult.output;
 
-    const cwd = process.cwd();
+    const config = defineConfig(parsedOptions);
 
-    const sbMain = getStorybookMain(String(parsedOptions.config));
+    const sbMain = getStorybookMain(config.sbConfigPath)
 
-    const sbConfigPath = path.resolve(parsedOptions.config);
-
-    if (!(await isExistsPath(sbConfigPath))) {
-      return reporter.printPathNotExists(sbConfigPath);
+    if (!(await isExistsPath(config.sbConfigPath))) {
+      return reporter.printPathNotExists(config.sbConfigPath);
     }
 
-    const outputDir = parsedOptions.outputDir || "";
-
-    const templateType = parsedOptions.templateType ?? "custom";
-
-    const templateDir = parsedOptions.templateDir
-      ? path.resolve(cwd, parsedOptions.templateDir)
-      : path.resolve(__dirname, `../templates/${templateType}`);
-
-    const isWatch = Boolean(options.watch);
-
-    const config: Config = {
-      cwd,
-      sbConfigPath,
-      outputDir,
-      templateType,
-      templateDir,
-    };
-
-    if (outputDir) {
+    if (config.outputDir) {
       await runClearOutputDir(config, reporter);
     }
 
     await runBuild(sbMain, config, reporter);
 
-    if (isWatch) {
+    if (config.isWatch) {
       await runWacth(sbMain, config, reporter);
     }
   });
