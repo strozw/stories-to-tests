@@ -18,6 +18,7 @@
     "check": "concurrently -c auto 'pnpm:check:*'",
     "format": "biome check --apply . ",
     "test": "vitest --run",
+    "watch:test": "vitest",
     "prepublish": "pnpm clear && pnpm build"
   },
   "keywords": ["storybook", "test", "cli"],
