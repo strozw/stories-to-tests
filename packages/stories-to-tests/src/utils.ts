@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { serverRequire } from "@storybook/core-common";
-import { unknown } from "valibot";
 
 export type Ok<V = unknown> = { value: V };
 export type Err<E = unknown> = { error: E };
@@ -108,5 +107,5 @@ export const deleteFileOrDir = async (filePath: string) => {
   return filePath;
 };
 
-export const baseNameFromPath = (filePath: string) =>
+export const baseNameFromStoriesPath = (filePath: string) =>
   path.basename(filePath).replace(/\.stories\..+$/, "");

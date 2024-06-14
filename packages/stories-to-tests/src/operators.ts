@@ -5,7 +5,7 @@ import type { Config } from "./config.js";
 import type { Result } from "./utils.js";
 import {
   asyncThrowableToResult,
-  baseNameFromPath,
+  baseNameFromStoriesPath,
   createFile,
   createOutputDirPaht,
   createStoriesAbsPath,
@@ -86,7 +86,7 @@ export const createTestFiles = async (storiesPath: string, config: Config) => {
         storiesAbsPath,
       )}`;
 
-      const storiesFileBaseName = baseNameFromPath(importStoriesPath);
+      const storiesFileBaseName = baseNameFromStoriesPath(importStoriesPath);
 
       const renderResult = throwableToResult(() =>
         renderer.render(templateName, {
