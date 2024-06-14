@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import path from "node:path";
+import { serverRequire } from "@storybook/core-common";
 import { Command } from "commander";
 import { Reporter } from "./reporter.js";
 import { runBuild, runClearOutputDir, runWacth } from "./runners.js";
-import { defineConfig, type Config } from "./config.js";
-import { getStorybookMain, isExistsPath } from "./utils.js";
+import { defineConfig } from "./config.js";
+import { buildStorybookMainRequirePath, isExistsPath } from "./utils.js";
 import { parseOptions } from "./options.js";
 
 const program = new Command();
@@ -33,7 +33,7 @@ program
     const paraseResult = parseOptions(options);
 
     if (!paraseResult.success) {
-      reporter.printParseOptionsError(paraseResult.issues)
+      reporter.printParseOptionsError(paraseResult.issues);
 
       return process.exit(1);
     }
@@ -42,7 +42,9 @@ program
 
     const config = defineConfig(parsedOptions);
 
-    const sbMain = getStorybookMain(config.sbConfigPath)
+    const sbMain = serverRequire(
+      buildStorybookMainRequirePath(config.sbConfigPath),
+    );
 
     if (!(await isExistsPath(config.sbConfigPath))) {
       return reporter.printPathNotExists(config.sbConfigPath);

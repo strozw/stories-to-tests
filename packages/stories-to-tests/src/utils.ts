@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { serverRequire } from "@storybook/core-common";
 
 export type Ok<V = unknown> = { value: V };
+
 export type Err<E = unknown> = { error: E };
 
 export type Result<V = unknown, E = unknown> = Ok<V> | Err<E>;
@@ -31,34 +31,36 @@ export const isErrorResult = (result: Result): result is { error: unknown } => {
   return "error" in result;
 };
 
-export const getStorybookMain = (configDirPath: string) => {
-  return serverRequire(path.join(configDirPath, "main"));
+export const buildStorybookMainRequirePath = (configDirPath: string) => {
+  return path.join(configDirPath, "main");
 };
 
-export const createOutputDirPaht = (cwd: string, outputDir: string) => {
+export const buildOutputDirPaht = (cwd: string, outputDir: string) => {
   return path.resolve(cwd, outputDir);
 };
 
-export const createStoriesAbsPath = (
+export const buildStoriesAbsPath = (
   storiesPath: string,
   sbConfigPath: string,
 ) => {
   return path.resolve(sbConfigPath, storiesPath);
 };
 
-export const createStoriesRelPath = (
+export const buildStoriesRelPath = (
   cwd: string,
   sbConfigPath: string,
   storiesPath: string,
 ) => {
-  return createStoriesAbsPath(storiesPath, sbConfigPath).replace(
+  return buildStoriesAbsPath(storiesPath, sbConfigPath).replace(
     new RegExp(`^${cwd}/`),
     "",
   );
 };
 
-export const templatePathToName = (templatePath: string, templateDir: string) =>
-  templatePath.replace(new RegExp(`^${templateDir}/`), "");
+export const convertTemplatePathToName = (
+  templatePath: string,
+  templateDir: string,
+) => templatePath.replace(new RegExp(`^${templateDir}/`), "");
 
 export const isExistsPath = async (filePath: string) => {
   return Boolean(
@@ -107,5 +109,5 @@ export const deleteFileOrDir = async (filePath: string) => {
   return filePath;
 };
 
-export const baseNameFromStoriesPath = (filePath: string) =>
+export const convertStoriesPathToBaseName = (filePath: string) =>
   path.basename(filePath).replace(/\.stories\..+$/, "");
