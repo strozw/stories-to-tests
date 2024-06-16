@@ -3,8 +3,6 @@ name: Check Script
 on:
   workflow_call:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   run:
     runs-on: ubuntu-latest
