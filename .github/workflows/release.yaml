@@ -13,10 +13,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
-    name: Release
+  setup:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -24,8 +22,16 @@ jobs:
         with:
           install_packages: true
 
+  check:
+    needs: setup
+    uses: .github/workflows/_check-script.yaml
+
+  publish:
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
       - name: Create Release Pull Request or Publish to npm
-        # https://github.com/changesets/action
         uses: changesets/action@v1
         with:
           publish: pnpm release

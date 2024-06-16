@@ -1,0 +1,24 @@
+name: Check in CI
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  setup:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node-js
+        with:
+          install_packages: true
+
+  check:
+    needs: setup
+    uses: .github/workflows/_check-script.yaml

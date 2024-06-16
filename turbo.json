@@ -8,7 +8,6 @@
     "debug": {},
     "check": {},
     "format": {},
-    "test": {},
-    "package-publish": {}
+    "test": {}
   }
 }
