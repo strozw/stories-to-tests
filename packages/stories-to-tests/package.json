@@ -16,8 +16,9 @@
     "check:tsc": "tsc --noEmit",
     "check:biome": "biome lint .",
     "check": "concurrently -c auto 'pnpm:check:*'",
-    "format": "biome check --apply . ",
+    "format": "biome check --write .",
     "test": "vitest --run",
+    "watch:test": "vitest",
     "prepublish": "pnpm clear && pnpm build"
   },
   "keywords": ["storybook", "test", "cli"],

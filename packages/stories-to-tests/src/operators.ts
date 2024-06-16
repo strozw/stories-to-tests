@@ -1,17 +1,17 @@
 import path from "node:path";
 import { Eta } from "eta";
 import { glob } from "glob";
-import type { Config } from "./types.js";
+import type { Config } from "./config.js";
 import type { Result } from "./utils.js";
 import {
   asyncThrowableToResult,
-  baseNameFromPath,
+  buildOutputDirPaht,
+  buildStoriesAbsPath,
+  convertStoriesPathToBaseName,
+  convertTemplatePathToName,
   createFile,
-  createOutputDirPaht,
-  createStoriesAbsPath,
   deleteFileOrDir,
   isErrorResult,
-  templatePathToName,
   throwableToResult,
 } from "./utils.js";
 
@@ -28,7 +28,7 @@ export const createTestFileAbsPath = (
   );
 
   if (outputDir) {
-    const basePath = createOutputDirPaht(cwd, outputDir);
+    const basePath = buildOutputDirPaht(cwd, outputDir);
 
     const part = testFileAbsPath.replace(cwd, "");
 
@@ -47,7 +47,7 @@ export type CreateTestFileResult = Result<{
 export const createTestFiles = async (storiesPath: string, config: Config) => {
   const { cwd, sbConfigPath, outputDir, templateDir } = config;
 
-  const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath);
+  const storiesAbsPath = buildStoriesAbsPath(storiesPath, sbConfigPath);
 
   const sbPreviewPath = path.join(sbConfigPath, "preview");
 
@@ -71,7 +71,7 @@ export const createTestFiles = async (storiesPath: string, config: Config) => {
         },
       };
 
-      const templateName = templatePathToName(templatePath, templateDir);
+      const templateName = convertTemplatePathToName(templatePath, templateDir);
 
       const testFileAbsPath = createTestFileAbsPath(
         storiesAbsPath,
@@ -86,7 +86,8 @@ export const createTestFiles = async (storiesPath: string, config: Config) => {
         storiesAbsPath,
       )}`;
 
-      const storiesFileBaseName = baseNameFromPath(importStoriesPath);
+      const storiesFileBaseName =
+        convertStoriesPathToBaseName(importStoriesPath);
 
       const renderResult = throwableToResult(() =>
         renderer.render(templateName, {
@@ -133,7 +134,7 @@ export type DeleteTestFileResult = Result<{
 export const deleteTestFiles = async (storiesPath: string, config: Config) => {
   const { cwd, sbConfigPath, templateDir } = config;
 
-  const storiesAbsPath = createStoriesAbsPath(storiesPath, sbConfigPath);
+  const storiesAbsPath = buildStoriesAbsPath(storiesPath, sbConfigPath);
 
   const templatePaths = await glob(path.join(templateDir, "*.eta"));
 
@@ -141,7 +142,7 @@ export const deleteTestFiles = async (storiesPath: string, config: Config) => {
 
   await Promise.allSettled(
     templatePaths.map(async (templatePath) => {
-      const templateName = templatePathToName(templatePath, templateDir);
+      const templateName = convertTemplatePathToName(templatePath, templateDir);
 
       const testFileAbsPath = createTestFileAbsPath(
         storiesAbsPath,
@@ -176,7 +177,7 @@ export const deleteTestFiles = async (storiesPath: string, config: Config) => {
 export const deleteOutputDir = async (config: Config) => {
   const { cwd, outputDir } = config;
 
-  const outputDirPath = createOutputDirPaht(cwd, outputDir);
+  const outputDirPath = buildOutputDirPaht(cwd, outputDir);
 
   const dirDeletingResult = await asyncThrowableToResult(() =>
     deleteFileOrDir(outputDirPath),

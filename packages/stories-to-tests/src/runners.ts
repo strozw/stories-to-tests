@@ -1,13 +1,13 @@
 import chokidar from "chokidar";
 import { glob } from "glob";
+import type { Config } from "./config.js";
 import {
   createTestFiles,
   deleteOutputDir,
   deleteTestFiles,
 } from "./operators.js";
 import type { Reporter } from "./reporter.js";
-import type { Config } from "./types.js";
-import { createStoriesRelPath } from "./utils.js";
+import { buildStoriesRelPath } from "./utils.js";
 
 export const runClearOutputDir = async (config: Config, reporter: Reporter) => {
   const result = await deleteOutputDir(config);
@@ -35,7 +35,7 @@ export const runBuild = async (
 
       const results = await createTestFiles(storiesPath, config);
 
-      const storiesRelPath = createStoriesRelPath(
+      const storiesRelPath = buildStoriesRelPath(
         cwd,
         sbConfigPath,
         storiesPath,
@@ -68,7 +68,7 @@ export const runWacth = async (
       watcher.on("add", async (storiesPath) => {
         const results = await createTestFiles(storiesPath, config);
 
-        const storiesRelPath = createStoriesRelPath(
+        const storiesRelPath = buildStoriesRelPath(
           cwd,
           sbConfigPath,
           storiesPath,
@@ -82,7 +82,7 @@ export const runWacth = async (
     .on("unlink", async (storiesPath) => {
       const results = await deleteTestFiles(storiesPath, config);
 
-      const storiesRelPath = createStoriesRelPath(
+      const storiesRelPath = buildStoriesRelPath(
         cwd,
         sbConfigPath,
         storiesPath,
