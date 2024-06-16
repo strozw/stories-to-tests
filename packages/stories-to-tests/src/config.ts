@@ -1,5 +1,5 @@
-import path from 'node:path';
-import type { ParsedOptions } from './options.js';
+import path from "node:path";
+import type { ParsedOptions } from "./options.js";
 
 export type Config = {
   cwd: string;
@@ -7,13 +7,13 @@ export type Config = {
   outputDir: string;
   templateType: "vitest-react" | "playwright-react" | "custom";
   templateDir: string;
-  isWatch: boolean
+  isWatch: boolean;
 };
 
 export const defineConfig = (options: ParsedOptions): Config => {
   const cwd = process.cwd();
 
-  const sbConfigPath = path.resolve(options.config ?? '.storybook');
+  const sbConfigPath = path.resolve(options.config ?? ".storybook");
 
   const outputDir = options.outputDir || "";
 
@@ -31,6 +31,6 @@ export const defineConfig = (options: ParsedOptions): Config => {
     outputDir,
     templateType,
     templateDir,
-    isWatch
+    isWatch,
   };
 };

@@ -18,7 +18,7 @@ export const optionsSchema = v.intersect([
   ]),
 ]);
 
-export type ParsedOptions = v.InferOutput<typeof optionsSchema>
+export type ParsedOptions = v.InferOutput<typeof optionsSchema>;
 
 export const parseOptions = (raw: unknown) => v.safeParse(optionsSchema, raw);
 

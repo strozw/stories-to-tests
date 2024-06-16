@@ -1,12 +1,12 @@
 import chokidar from "chokidar";
 import { glob } from "glob";
+import type { Config } from "./config.js";
 import {
   createTestFiles,
   deleteOutputDir,
   deleteTestFiles,
 } from "./operators.js";
 import type { Reporter } from "./reporter.js";
-import type { Config } from "./config.js";
 import { buildStoriesRelPath } from "./utils.js";
 
 export const runClearOutputDir = async (config: Config, reporter: Reporter) => {

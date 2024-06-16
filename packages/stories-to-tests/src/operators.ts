@@ -5,13 +5,13 @@ import type { Config } from "./config.js";
 import type { Result } from "./utils.js";
 import {
   asyncThrowableToResult,
-  convertStoriesPathToBaseName,
-  createFile,
   buildOutputDirPaht,
   buildStoriesAbsPath,
+  convertStoriesPathToBaseName,
+  convertTemplatePathToName,
+  createFile,
   deleteFileOrDir,
   isErrorResult,
-  convertTemplatePathToName,
   throwableToResult,
 } from "./utils.js";
 

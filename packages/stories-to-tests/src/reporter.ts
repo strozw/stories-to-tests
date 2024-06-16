@@ -4,8 +4,8 @@ import type {
   CreateTestFileResult,
   DeleteTestFileResult,
 } from "./operators.js";
-import { isErrorResult } from "./utils.js";
 import type { ParseResultIssues } from "./options.js";
+import { isErrorResult } from "./utils.js";
 
 export class Reporter {
   printParseOptionsError(issues: ParseResultIssues) {
