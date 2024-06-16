@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: ./.github/actions/checkout-setup-node
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node
         with:
           install_packages: true
 

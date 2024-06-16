@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: ./.github/actions/checkout-setup-node-js
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node
 
       - run: pnpm check
