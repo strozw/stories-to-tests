@@ -1,4 +1,4 @@
-name: Check in CI
+name: PR Check
 
 on:
   push:
@@ -12,12 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/setup-node-js
+      - uses: ./.github/actions/checkout-setup-node-js
         with:
           install_packages: true
 
   check:
     needs: setup
-    uses: ./.github/workflows/_check-script.yaml
+    uses: ./.github/workflows/_check.yaml

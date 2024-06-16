@@ -1,17 +1,13 @@
-name: Check Script
+name: Check
 
 on:
   workflow_call:
 
 jobs:
-  run:
+  check:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/setup-node-js
+      - uses: ./.github/actions/checkout-setup-node-js
 
       - run: pnpm check
-
-

@@ -10,6 +10,8 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: actions/checkout@v4
+
     - name: Setup Corepack
       shell: bash
       run: corepack enable

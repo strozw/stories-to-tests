@@ -10,7 +10,7 @@
   "files": ["dist", "templates"],
   "scripts": {
     "clear": "rimraf ./dist",
-    "build": "tsup ./src/index.ts  --minify",
+    "build": "pnpm clear && && tsup ./src/index.ts  --minify",
     "dev": "tsup ./src/index.ts --watch --sourcemap",
     "debug": " node --enable-source-maps --inspect ./dist/index.cjs",
     "check:tsc": "tsc --noEmit",
@@ -18,8 +18,7 @@
     "check": "concurrently -c auto 'pnpm:check:*'",
     "format": "biome check --write .",
     "test": "vitest --run",
-    "watch:test": "vitest",
-    "prepublish": "pnpm clear && pnpm build"
+    "watch:test": "vitest"
   },
   "keywords": ["storybook", "test", "cli"],
   "author": "strozw",
