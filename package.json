@@ -17,7 +17,8 @@
     "check": "turbo run check",
     "format": "turbo run format",
     "test": "turbo run test",
-    "pacakge-publish": "turbo run pacakge-publish",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish",
     "postinstall": "lefthook install"
   },
   "keywords": [],
