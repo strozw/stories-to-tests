@@ -17,7 +17,7 @@ runs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: .node-version
+        node-version-file: .node-version
         cache: pnpm
 
     - name: Restore `node_modules` caches
