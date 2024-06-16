@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import colorette from "colorette";
 import * as v from "valibot";
 import type {
   CreateTestFileResult,
@@ -23,24 +23,24 @@ export class Reporter {
   };
 
   printPathNotExists(targetPath: string) {
-    console.log(chalk.red(`Error: "${targetPath}" is not exists.`));
+    console.log(colorette.red(`Error: "${targetPath}" is not exists.`));
   }
 
   printStoriesPath(storiesPath: string) {
-    console.log(chalk.blue("Ref:"), chalk.blue(storiesPath));
+    console.log(colorette.blue("Ref:"), colorette.blue(storiesPath));
   }
 
   printAddStoriesPath(storiesRelPath: string) {
     console.log(
-      chalk.bgGreen(chalk.black(" ADD    ")),
-      chalk.blue(storiesRelPath),
+      colorette.bgGreen(colorette.black(" ADD    ")),
+      colorette.blue(storiesRelPath),
     );
   }
 
   printDeleteStoriesPath(storiesRelPath: string) {
     console.log(
-      chalk.bgRed(chalk.black(" DELETE ")),
-      chalk.blue(storiesRelPath),
+      colorette.bgRed(colorette.black(" DELETE ")),
+      colorette.blue(storiesRelPath),
     );
   }
 
@@ -65,13 +65,16 @@ export class Reporter {
           this.#result.override++;
         }
 
-        console.log(chalk.bgYellow(chalk.black(" OVERRIDE ")), testFilePath);
+        console.log(
+          colorette.bgYellow(colorette.black(" OVERRIDE ")),
+          testFilePath,
+        );
       } else if (isCreated) {
         if (record) {
           this.#result.created++;
         }
 
-        console.log("", chalk.green("+"), testFilePath);
+        console.log("", colorette.green("+"), testFilePath);
       }
     }
   }
@@ -81,7 +84,7 @@ export class Reporter {
       if (isErrorResult(result)) {
         console.error(result.error);
       } else {
-        console.log(chalk.red(" -"), result.value.testFilePath);
+        console.log(colorette.red(" -"), result.value.testFilePath);
       }
     }
   }
@@ -90,14 +93,14 @@ export class Reporter {
     console.log("");
 
     console.log(
-      chalk.green(`Created: ${this.#result.created}`),
-      chalk.yellow(`Override: ${this.#result.override}`),
-      chalk.red(`Failed: ${this.#result.failed}`),
+      colorette.green(`Created: ${this.#result.created}`),
+      colorette.yellow(`Override: ${this.#result.override}`),
+      colorette.red(`Failed: ${this.#result.failed}`),
     );
   }
 
   printDeletedOutputDir(ouputDir: string) {
-    console.log(chalk.blue("Reset OutputDir"));
-    console.log(chalk.red(" -"), ouputDir);
+    console.log(colorette.blue("Reset OutputDir"));
+    console.log(colorette.red(" -"), ouputDir);
   }
 }
