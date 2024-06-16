@@ -13,19 +13,29 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
-    name: Release
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node
+        with:
+          install_packages: true
+
+  check:
+    needs: setup
+    uses: ./.github/workflows/_check.yaml
+
+  publish:
+    needs: check
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/setup-node-js
-        with:
-          install_packages: true
+      - uses: ./.github/actions/setup-node
 
       - name: Create Release Pull Request or Publish to npm
-        # https://github.com/changesets/action
         uses: changesets/action@v1
         with:
           publish: pnpm release

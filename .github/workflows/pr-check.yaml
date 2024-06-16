@@ -1,0 +1,23 @@
+name: PR Check
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node
+        with:
+          install_packages: true
+
+  check:
+    needs: setup
+    uses: ./.github/workflows/_check.yaml
