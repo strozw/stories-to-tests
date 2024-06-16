@@ -21,4 +21,4 @@ jobs:
 
   check:
     needs: setup
-    uses: .github/workflows/_check-script.yaml
+    uses: ./.github/workflows/_check-script.yaml
