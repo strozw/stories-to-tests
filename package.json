@@ -6,8 +6,11 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@9.2.0+sha256.94fab213df221c55b6956b14a2264c21c6203cca9f0b3b95ff2fe9b84b120390",
-  "files": ["dist", "templates"],
+  "packageManager": "pnpm@9.3.0+sha512.ee7b93e0c2bd11409c6424f92b866f31d3ea1bef5fbe47d3c7500cdc3c9668833d2e55681ad66df5b640c61fa9dc25d546efa54d76d7f8bf54b13614ac293631",
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
     "publish-package": "pnpm publish --filter=stories-to-tests",
     "version-package": "pnpm version --filter=stories-to-tests",
