@@ -1,13 +1,16 @@
 {
   "name": "stories-to-tests",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "generate stories tests files from `.stories.tsx`",
   "bin": "./dist/index.cjs",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "templates"],
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
     "clear": "rimraf ./dist",
     "build": "tsup ./src/index.ts  --minify",
@@ -22,7 +25,11 @@
     "package-publish": "pnpm publish",
     "prepublish": "pnpm clear && pnpm build"
   },
-  "keywords": ["storybook", "test", "cli"],
+  "keywords": [
+    "storybook",
+    "test",
+    "cli"
+  ],
   "author": "strozw",
   "license": "MIT",
   "devDependencies": {
