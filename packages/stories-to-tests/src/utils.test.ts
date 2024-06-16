@@ -65,3 +65,5 @@ describe("isErrorResult", () => {
     expect(isErrorResult({ value: new Error("ok") })).toBe(false);
   });
 });
+
+describe("buildStorybookMainRequirePath", () => {});

@@ -1,4 +1,4 @@
  pre-push:
    commands:
      project-code-checking:
-       run: pnpm check
+       run: pnpm format
