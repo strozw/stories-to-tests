@@ -28,7 +28,7 @@
     "@changesets/cli": "^2.27.5",
     "concurrently": "^8.2.2",
     "lefthook": "^1.6.16",
-    "turbo": "^1.13.3",
+    "turbo": "^2.0.4",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   }
