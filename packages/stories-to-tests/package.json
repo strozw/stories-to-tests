@@ -29,7 +29,7 @@
     "tsup": "^8.1.0"
   },
   "dependencies": {
-    "@storybook/core-common": "^8.1.4",
+    "@storybook/core-common": "^8.1.9",
     "colorette": "^2.0.20",
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
