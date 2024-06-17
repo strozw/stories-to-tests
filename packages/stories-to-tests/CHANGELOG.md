@@ -1,5 +1,11 @@
 # stories-to-tests
 
+## 0.1.16
+
+### Patch Changes
+
+- b6f7ea0: change chalk to colorette
+
 ## 0.1.15
 
 ### Patch Changes
