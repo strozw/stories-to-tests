@@ -7,13 +7,10 @@
   "engines": {
     "node": ">=20"
   },
-  "files": [
-    "dist",
-    "templates"
-  ],
+  "files": ["dist", "templates"],
   "scripts": {
     "clear": "rimraf ./dist",
-    "build": "pnpm clear && && tsup ./src/index.ts  --minify",
+    "build": "pnpm clear && tsup ./src/index.ts  --minify",
     "dev": "tsup ./src/index.ts --watch --sourcemap",
     "debug": " node --enable-source-maps --inspect ./dist/index.cjs",
     "check:tsc": "tsc --noEmit",
@@ -23,11 +20,7 @@
     "test": "vitest --run",
     "watch:test": "vitest"
   },
-  "keywords": [
-    "storybook",
-    "test",
-    "cli"
-  ],
+  "keywords": ["storybook", "test", "cli"],
   "author": "strozw",
   "license": "MIT",
   "devDependencies": {
