@@ -7,7 +7,10 @@
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "templates"],
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
     "clear": "rimraf ./dist",
     "build": "pnpm clear && tsup ./src/index.ts  --minify",
@@ -20,7 +23,11 @@
     "test": "vitest --run",
     "watch:test": "vitest"
   },
-  "keywords": ["storybook", "test", "cli"],
+  "keywords": [
+    "storybook",
+    "test",
+    "cli"
+  ],
   "author": "strozw",
   "license": "MIT",
   "devDependencies": {
