@@ -1,9 +1,9 @@
 name: PR Check
 
 on:
-  push:
-    branches-ignore:
-      - main
+  pull_request:
+    types: 
+      - synchronize
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
