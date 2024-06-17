@@ -1,13 +1,16 @@
 {
   "name": "stories-to-tests",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "generate stories tests files from `.stories.tsx`",
   "bin": "./dist/index.cjs",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
-  "files": ["dist", "templates"],
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
     "clear": "rimraf ./dist",
     "build": "pnpm clear && && tsup ./src/index.ts  --minify",
@@ -20,7 +23,11 @@
     "test": "vitest --run",
     "watch:test": "vitest"
   },
-  "keywords": ["storybook", "test", "cli"],
+  "keywords": [
+    "storybook",
+    "test",
+    "cli"
+  ],
   "author": "strozw",
   "license": "MIT",
   "devDependencies": {
@@ -29,7 +36,7 @@
     "tsup": "^8.1.0"
   },
   "dependencies": {
-    "@storybook/core-common": "^8.1.4",
+    "@storybook/core-common": "^8.1.9",
     "colorette": "^2.0.20",
     "chokidar": "^3.6.0",
     "commander": "^12.1.0",
