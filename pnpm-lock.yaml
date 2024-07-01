@@ -33,8 +33,8 @@ importers:
   packages/stories-to-tests:
     dependencies:
       '@storybook/core-common':
-        specifier: ^8.1.9
-        version: 8.1.9(prettier@3.3.0)
+        specifier: ^8.1.11
+        version: 8.1.11(prettier@3.3.0)
       chokidar:
         specifier: ^3.6.0
         version: 3.6.0
@@ -1636,12 +1636,18 @@ packages:
       vite-plugin-glimmerx:
         optional: true
 
+  '@storybook/channels@8.1.11':
+    resolution: {integrity: sha512-fu5FTqo6duOqtJFa6gFzKbiSLJoia+8Tibn3xFfB6BeifWrH81hc+AZq0lTmHo5qax2G5t8ZN8JooHjMw6k2RA==}
+
   '@storybook/channels@8.1.9':
     resolution: {integrity: sha512-7dvzoHBJQDvG1PMJVLnsPw3xuQ6KMZBSOgzVrkFWi4f3j6zXjs7ADVo/uqIoLq8inziupz2himWFnUtl5moIUw==}
 
   '@storybook/cli@8.1.9':
     resolution: {integrity: sha512-+4DQJf5yrdmKrAs8sx0WvKu/ja49oOLQU2MxRPKhXW3bxDFjkTYvWuCKwSbMwUa7Npt96CK3bwAPP53jz/+mXA==}
     hasBin: true
+
+  '@storybook/client-logger@8.1.11':
+    resolution: {integrity: sha512-DVMh2usz3yYmlqCLCiCKy5fT8/UR9aTh+gSqwyNFkGZrIM4otC5A8eMXajXifzotQLT5SaOEnM3WzHwmpvMIEA==}
 
   '@storybook/client-logger@8.1.9':
     resolution: {integrity: sha512-sHX0UhAquhVCtbRtDNN5Ura8hUxRjZWKgQKt8NWQIt9hOSSurGJE3+93OzNAYDp54kh77QKY3qdZCgAJZuWZPw==}
@@ -1655,6 +1661,14 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
 
+  '@storybook/core-common@8.1.11':
+    resolution: {integrity: sha512-Ix0nplD4I4DrV2t9B+62jaw1baKES9UbR/Jz9LVKFF9nsua3ON0aVe73dOjMxFWBngpzBYWe+zYBTZ7aQtDH4Q==}
+    peerDependencies:
+      prettier: ^2 || ^3
+    peerDependenciesMeta:
+      prettier:
+        optional: true
+
   '@storybook/core-common@8.1.9':
     resolution: {integrity: sha512-+KReoo41FUknTxk3fbnoul995SnZdKAVSK6MuqKOQnC9PH6bh864k6i1LShVZx/wk3n25h9xorD3UgyRI6sZ0w==}
     peerDependencies:
@@ -1662,6 +1676,9 @@ packages:
     peerDependenciesMeta:
       prettier:
         optional: true
+
+  '@storybook/core-events@8.1.11':
+    resolution: {integrity: sha512-vXaNe2KEW9BGlLrg0lzmf5cJ0xt+suPjWmEODH5JqBbrdZ67X6ApA2nb6WcxDQhykesWCuFN5gp1l+JuDOBi7A==}
 
   '@storybook/core-events@8.1.9':
     resolution: {integrity: sha512-c8MnBqUtTvIBNoDBBQQrFEy8pNAagcDryh5FM+T1SPBsH6j3fRSZwXMc6vvW2BYkQxJ67kpd7xrH7uapqhNEcg==}
@@ -1671,6 +1688,9 @@ packages:
 
   '@storybook/csf-plugin@8.1.9':
     resolution: {integrity: sha512-OC3Z7lx5Tt3iNqVpfAykCKhmHyWXwjPvK0C0RubmKLRWdH66aKp2SzvqJSFppRGZySWKKJqSBGtjB/AsG/Do4Q==}
+
+  '@storybook/csf-tools@8.1.11':
+    resolution: {integrity: sha512-6qMWAg/dBwCVIHzANM9lSHoirwqSS+wWmv+NwAs0t9S94M75IttHYxD3IyzwaSYCC5llp0EQFvtXXAuSfFbibg==}
 
   '@storybook/csf-tools@8.1.9':
     resolution: {integrity: sha512-nCYGNJOoBZjAdD1blTgS8/O0HwXaZ4cwUd8G9pQbsyt/cSW65clATeEV1rTTcR+G9JHnZBQ3jLAnH2dbFY0c8w==}
@@ -1705,6 +1725,9 @@ packages:
 
   '@storybook/manager@8.1.9':
     resolution: {integrity: sha512-sp1N7ZgOtGK5uhCgwuPQlJ4JYKr3TyNeahotwAf2FUb5n70YyXDzqoqO8q8H0y9NarX+EcP1gJ4GmpT9+qTxsQ==}
+
+  '@storybook/node-logger@8.1.11':
+    resolution: {integrity: sha512-wdzFo7B2naGhS52L3n1qBkt5BfvQjs8uax6B741yKRpiGgeAN8nz8+qelkD25MbSukxvbPgDot7WJvsMU/iCzg==}
 
   '@storybook/node-logger@8.1.9':
     resolution: {integrity: sha512-X5YGkJOui+m3TXqbf7HODzrf4VdzamtlUXlD08Qm36JJD/qJJZVhSivzkQR4uom/VW+ejChM2ETgw41SrK0vJA==}
@@ -1759,6 +1782,9 @@ packages:
         optional: true
       react-dom:
         optional: true
+
+  '@storybook/types@8.1.11':
+    resolution: {integrity: sha512-k9N5iRuY2+t7lVRL6xeu6diNsxO3YI3lS4Juv3RZ2K4QsE/b3yG5ElfJB8DjHDSHwRH4ORyrU71KkOCUVfvtnw==}
 
   '@storybook/types@8.1.9':
     resolution: {integrity: sha512-temr7cNoBwu/+EF0jZ7aIfHtqwMqyevPLRfl/emkZM2t751NxbTkP1kxvfk9I0L8wF7mvVHXWn2iIM3QBqzWDw==}
@@ -6830,6 +6856,14 @@ snapshots:
       - prettier
       - supports-color
 
+  '@storybook/channels@8.1.11':
+    dependencies:
+      '@storybook/client-logger': 8.1.11
+      '@storybook/core-events': 8.1.11
+      '@storybook/global': 5.0.0
+      telejson: 7.2.0
+      tiny-invariant: 1.3.3
+
   '@storybook/channels@8.1.9':
     dependencies:
       '@storybook/client-logger': 8.1.9
@@ -6885,6 +6919,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@storybook/client-logger@8.1.11':
+    dependencies:
+      '@storybook/global': 5.0.0
+
   '@storybook/client-logger@8.1.9':
     dependencies:
       '@storybook/global': 5.0.0
@@ -6927,6 +6965,43 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
+  '@storybook/core-common@8.1.11(prettier@3.3.0)':
+    dependencies:
+      '@storybook/core-events': 8.1.11
+      '@storybook/csf-tools': 8.1.11
+      '@storybook/node-logger': 8.1.11
+      '@storybook/types': 8.1.11
+      '@yarnpkg/fslib': 2.10.3
+      '@yarnpkg/libzip': 2.3.0
+      chalk: 4.1.2
+      cross-spawn: 7.0.3
+      esbuild: 0.20.2
+      esbuild-register: 3.5.0(esbuild@0.20.2)
+      execa: 5.1.1
+      file-system-cache: 2.3.0
+      find-cache-dir: 3.3.2
+      find-up: 5.0.0
+      fs-extra: 11.2.0
+      glob: 10.4.1
+      handlebars: 4.7.8
+      lazy-universal-dotenv: 4.0.0
+      node-fetch: 2.7.0
+      picomatch: 2.3.1
+      pkg-dir: 5.0.0
+      prettier-fallback: prettier@3.3.0
+      pretty-hrtime: 1.0.3
+      resolve-from: 5.0.0
+      semver: 7.6.2
+      tempy: 3.1.0
+      tiny-invariant: 1.3.3
+      ts-dedent: 2.2.0
+      util: 0.12.5
+    optionalDependencies:
+      prettier: 3.3.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   '@storybook/core-common@8.1.9(prettier@3.3.0)':
     dependencies:
       '@storybook/core-events': 8.1.9
@@ -6963,6 +7038,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@storybook/core-events@8.1.11':
+    dependencies:
+      '@storybook/csf': 0.1.7
+      ts-dedent: 2.2.0
 
   '@storybook/core-events@8.1.9':
     dependencies:
@@ -7029,6 +7109,20 @@ snapshots:
     dependencies:
       '@storybook/csf-tools': 8.1.9
       unplugin: 1.10.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@storybook/csf-tools@8.1.11':
+    dependencies:
+      '@babel/generator': 7.24.6
+      '@babel/parser': 7.24.6
+      '@babel/traverse': 7.24.6
+      '@babel/types': 7.24.6
+      '@storybook/csf': 0.1.7
+      '@storybook/types': 8.1.11
+      fs-extra: 11.2.0
+      recast: 0.23.7
+      ts-dedent: 2.2.0
     transitivePeerDependencies:
       - supports-color
 
@@ -7110,6 +7204,8 @@ snapshots:
       - react-dom
 
   '@storybook/manager@8.1.9': {}
+
+  '@storybook/node-logger@8.1.11': {}
 
   '@storybook/node-logger@8.1.9': {}
 
@@ -7243,6 +7339,12 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@storybook/types@8.1.11':
+    dependencies:
+      '@storybook/channels': 8.1.11
+      '@types/express': 4.17.21
+      file-system-cache: 2.3.0
 
   '@storybook/types@8.1.9':
     dependencies:
