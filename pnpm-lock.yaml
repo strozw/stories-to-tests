@@ -92,8 +92,8 @@ importers:
         specifier: ^8.1.9
         version: 8.1.9(react@18.3.1)
       '@storybook/blocks':
-        specifier: ^8.1.9
-        version: 8.1.9(@types/react-dom@18.3.0)(@types/react@18.3.3)(prettier@3.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^8.2.2
+        version: 8.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.1.9(@babel/preset-env@7.24.6(@babel/core@7.24.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@storybook/react':
         specifier: ^8.1.9
         version: 8.1.9(prettier@3.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5)
@@ -1618,6 +1618,18 @@ packages:
       react-dom:
         optional: true
 
+  '@storybook/blocks@8.2.2':
+    resolution: {integrity: sha512-av0Tryg4toDl2L/d1ABErtsAk9wvM1su6+M4wq5/Go50sk5IjGTldhbZFa9zNOohxLkZwaj0Q5xAgJ1Y+m5KrQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
+      storybook: ^8.2.2
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   '@storybook/builder-manager@8.1.9':
     resolution: {integrity: sha512-CmDXVrx3moUde6VWmdb49eCYHNu4e2wxeANKSsW1yEC0OLysQ9N6W9B5CuVWeoV3axVX/tKDqC83YY/008/4Qg==}
 
@@ -1697,6 +1709,9 @@ packages:
 
   '@storybook/csf@0.0.1':
     resolution: {integrity: sha512-USTLkZze5gkel8MYCujSRBVIrUQ3YPBrLOx7GNk/0wttvVtlzWXAq9eLbQ4p/NicGxP+3T7KPEMVV//g+yubpw==}
+
+  '@storybook/csf@0.1.11':
+    resolution: {integrity: sha512-dHYFQH3mA+EtnCkHXzicbLgsvzYjcDJ1JWsogbItZogkPHgSJM/Wr71uMkcvw8v9mmCyP4NpXJuu6bPoVsOnzg==}
 
   '@storybook/csf@0.1.7':
     resolution: {integrity: sha512-53JeLZBibjQxi0Ep+/AJTfxlofJlxy1jXcSKENlnKxHjWEYyHQCumMP5yTFjf7vhNnMjEpV3zx6t23ssFiGRyw==}
@@ -3675,6 +3690,12 @@ packages:
 
   markdown-to-jsx@7.3.2:
     resolution: {integrity: sha512-B+28F5ucp83aQm+OxNrPkS8z0tMKaeHiy0lHJs3LqCyDQFtWuenaIrkaVTgAm1pf1AU85LXltva86hlaT17i8Q==}
+    engines: {node: '>= 10'}
+    peerDependencies:
+      react: '>= 0.14.0'
+
+  markdown-to-jsx@7.4.7:
+    resolution: {integrity: sha512-0+ls1IQZdU6cwM1yu0ZjjiVWYtkbExSyUIFU2ZeDIFuZM1W42Mh4OlJ4nb4apX4H8smxDHRdFaoIVJGwfv5hkg==}
     engines: {node: '>= 10'}
     peerDependencies:
       react: '>= 0.14.0'
@@ -6778,7 +6799,7 @@ snapshots:
       '@storybook/client-logger': 8.1.9
       '@storybook/components': 8.1.9(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@storybook/core-events': 8.1.9
-      '@storybook/csf': 0.1.7
+      '@storybook/csf': 0.1.11
       '@storybook/docs-tools': 8.1.9(prettier@3.3.0)
       '@storybook/global': 5.0.0
       '@storybook/icons': 1.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -6807,6 +6828,27 @@ snapshots:
       - encoding
       - prettier
       - supports-color
+
+  '@storybook/blocks@8.2.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.1.9(@babel/preset-env@7.24.6(@babel/core@7.24.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@storybook/csf': 0.1.11
+      '@storybook/global': 5.0.0
+      '@storybook/icons': 1.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/lodash': 4.17.4
+      color-convert: 2.0.1
+      dequal: 2.0.3
+      lodash: 4.17.21
+      markdown-to-jsx: 7.4.7(react@18.3.1)
+      memoizerific: 1.11.3
+      polished: 4.3.1
+      react-colorful: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      storybook: 8.1.9(@babel/preset-env@7.24.6(@babel/core@7.24.6))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      telejson: 7.2.0
+      ts-dedent: 2.2.0
+      util-deprecate: 1.0.2
+    optionalDependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@storybook/builder-manager@8.1.9(prettier@3.3.0)':
     dependencies:
@@ -6932,7 +6974,7 @@ snapshots:
       '@babel/core': 7.24.6
       '@babel/preset-env': 7.24.6(@babel/core@7.24.6)
       '@babel/types': 7.24.6
-      '@storybook/csf': 0.1.7
+      '@storybook/csf': 0.1.11
       '@storybook/csf-tools': 8.1.9
       '@storybook/node-logger': 8.1.9
       '@storybook/types': 8.1.9
@@ -6952,7 +6994,7 @@ snapshots:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot': 1.0.2(@types/react@18.3.3)(react@18.3.1)
       '@storybook/client-logger': 8.1.9
-      '@storybook/csf': 0.1.7
+      '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/icons': 1.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@storybook/theming': 8.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -7046,7 +7088,7 @@ snapshots:
 
   '@storybook/core-events@8.1.9':
     dependencies:
-      '@storybook/csf': 0.1.7
+      '@storybook/csf': 0.1.11
       ts-dedent: 2.2.0
 
   '@storybook/core-server@8.1.9(prettier@3.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
@@ -7059,7 +7101,7 @@ snapshots:
       '@storybook/channels': 8.1.9
       '@storybook/core-common': 8.1.9(prettier@3.3.0)
       '@storybook/core-events': 8.1.9
-      '@storybook/csf': 0.1.7
+      '@storybook/csf': 0.1.11
       '@storybook/csf-tools': 8.1.9
       '@storybook/docs-mdx': 3.1.0-next.0
       '@storybook/global': 5.0.0
@@ -7132,7 +7174,7 @@ snapshots:
       '@babel/parser': 7.24.6
       '@babel/traverse': 7.24.6
       '@babel/types': 7.24.6
-      '@storybook/csf': 0.1.7
+      '@storybook/csf': 0.1.11
       '@storybook/types': 8.1.9
       fs-extra: 11.2.0
       recast: 0.23.7
@@ -7143,6 +7185,10 @@ snapshots:
   '@storybook/csf@0.0.1':
     dependencies:
       lodash: 4.17.21
+
+  '@storybook/csf@0.1.11':
+    dependencies:
+      type-fest: 2.19.0
 
   '@storybook/csf@0.1.7':
     dependencies:
@@ -9473,6 +9519,10 @@ snapshots:
   map-or-similar@1.5.0: {}
 
   markdown-to-jsx@7.3.2(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+
+  markdown-to-jsx@7.4.7(react@18.3.1):
     dependencies:
       react: 18.3.1
 
